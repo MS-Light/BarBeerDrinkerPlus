@@ -10,8 +10,18 @@
   	<description></description>
   	<servlet-class>rpc.SearchBeer</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>Calculate</servlet-name>
+  	<display-name>Calculate</display-name>
+  	<description></description>
+  	<servlet-class>rpc.Calculate</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>SearchBeer</servlet-name>
   	<url-pattern>/search</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Calculate</servlet-name>
+  	<url-pattern>/calculate</url-pattern>
   </servlet-mapping>
 </web-app>
