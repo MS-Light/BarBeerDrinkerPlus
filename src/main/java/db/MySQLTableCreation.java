@@ -16,28 +16,28 @@ public class MySQLTableCreation {
 				return;
 			}
 			// Step 2 Drop tables in case they exist.
-			Statement statement = conn.createStatement();
-			String sql = "DROP TABLE IF EXISTS Sells";
-			statement.executeUpdate(sql);
-
-			sql = "DROP TABLE IF EXISTS Beers";
-			statement.executeUpdate(sql);
-
-			sql = "DROP TABLE IF EXISTS Bars";
-			statement.executeUpdate(sql);
-
-			sql = "DROP TABLE IF EXISTS Drinkers";
-			statement.executeUpdate(sql);
-			
-			conn.close();
-			System.out.println("Import done successfully");
-			
-	// Step 3 Create new tables
-			sql = "CREATE TABLE Beers ("
-								+ "manf VARCHAR(50),"
-								+ "name VARCHAR(255) NOT NULL,"
-								+ ")";
-			statement.executeUpdate(sql);
+//			Statement statement = conn.createStatement();
+//			String sql = "DROP TABLE IF EXISTS Sells";
+//			statement.executeUpdate(sql);
+//
+//			sql = "DROP TABLE IF EXISTS Beers";
+//			statement.executeUpdate(sql);
+//
+//			sql = "DROP TABLE IF EXISTS Bars";
+//			statement.executeUpdate(sql);
+//
+//			sql = "DROP TABLE IF EXISTS Drinkers";
+//			statement.executeUpdate(sql);
+//			
+//			conn.close();
+//			System.out.println("Import done successfully");
+//			
+//	// Step 3 Create new tables
+//			sql = "CREATE TABLE Beers ("
+//								+ "manf VARCHAR(50),"
+//								+ "name VARCHAR(255) NOT NULL,"
+//								+ ")";
+//			statement.executeUpdate(sql);
 
 
 		} catch (Exception e) {

@@ -2,6 +2,7 @@ package rpc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import db.MySQLConnection;
+import entity.Beer;
 /**
  * Servlet implementation class SearchBeer
  */
@@ -30,10 +34,20 @@ public class SearchBeer extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 
+		String BeerID = request.getParameter("name");
+		
+		MySQLConnection connection = new MySQLConnection();
+		Set<Beer> Beers = connection.getBeersInfo(BeerID);
+		connection.close();
+		
 		JSONArray array = new JSONArray();
-		array.put(new JSONObject().put("username", "abcd"));
-		array.put(new JSONObject().put("username", "1234"));
+		for (Beer beer : Beers) {
+			JSONObject obj = beer.toJSONObject();
+			obj.put("Beers", true);
+			array.put(obj);
+		}
 		RpcHelper.writeJsonArray(response, array);
+
 	}
 
 	/**
