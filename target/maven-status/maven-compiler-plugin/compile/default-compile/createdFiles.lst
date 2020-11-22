@@ -1,1 +1,14 @@
+rpc/GetBeer.class
+db/MySQLConnection.class
+entity/Beer$BeerBuilder.class
+rpc/Register.class
+rpc/Calculate.class
 entity/Beer$1.class
+rpc/Login.class
+db/MySQLTableCreation.class
+rpc/RpcHelper.class
+rpc/Logout.class
+entity/Bill$1.class
+entity/Transactions$1.class
+db/MySQLDBUtil.class
+entity/Beer.class

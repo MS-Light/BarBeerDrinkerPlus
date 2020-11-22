@@ -40,7 +40,6 @@ public class GetBeer extends HttpServlet {
 		JSONArray array = new JSONArray();
 		for (Beer beer : beers) {
 			JSONObject obj = beer.toJSONObject();
-			obj.put("beer", true);
 			array.put(obj);
 		}
 		RpcHelper.writeJsonArray(response, array);

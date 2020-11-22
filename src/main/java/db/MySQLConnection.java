@@ -9,6 +9,10 @@ import java.util.Set;
 
 import entity.Beer;
 import entity.Beer.BeerBuilder;
+import entity.Bill;
+import entity.Transactions;
+import entity.Transactions.TransactionsBuilder;
+import entity.Bill.BillBuilder;
 
 
 public class MySQLConnection {
@@ -16,7 +20,7 @@ public class MySQLConnection {
 
 	public MySQLConnection() {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 			conn = DriverManager.getConnection(MySQLDBUtil.URL);
 
 		} catch (Exception e) {
@@ -33,6 +37,7 @@ public class MySQLConnection {
 			}
 		}
 	}
+	
 	public Set<String> getBeers() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -61,7 +66,7 @@ public class MySQLConnection {
 			return new HashSet<>();
 		}
 		Set<Beer> BeersInfo = new HashSet<>();
-		Set<String> BeersID = getBeers();
+//		Set<String> BeersID = getBeers();
 
 		String sql = "SELECT * FROM Beer";
 		try {
@@ -82,6 +87,109 @@ public class MySQLConnection {
 		}
 		return BeersInfo;
 	}
+	
+	
+	
+	
+	public Set<String> getBillID(String username) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashSet<>();
+		}
+
+		Set<String> bill_id = new HashSet<>();
+
+		try {
+			String sql = "SELECT Bills.bill_id FROM  Bills left join Transactions on Bills.bill_id = Transactions.bill_id Where Bills.drinker = ? group by bill_id Order By Bills.bar, bill_id, Bills.date, Bills.time;";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, username);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				String beerN = rs.getString("bill_id");
+				bill_id.add(beerN);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return bill_id;
+	}
+	
+	public Set<Transactions> getTransactions(String username) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashSet<>();
+		}
+		Set<Transactions> transaction = new HashSet<>();
+		Set<String> bill_id = getBillID(username);
+
+		for (String a : bill_id) {
+			Set<Bill> bill_detail = getBillDetail(a);
+			TransactionsBuilder builder = new TransactionsBuilder();
+			builder.setTransactions_id(a);
+			builder.setBills(bill_detail);
+			transaction.add(builder.build());
+		}
+		return transaction;
+	}
+	
+	
+	public Set<Bill> getBillDetail(String bill_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashSet<>();
+		}
+		Set<Bill> bill = new HashSet<>();
+
+		String sql = "SELECT Bills.bill_id,Bills.bar,Bills.time,Bills.date,Bills.drinker,Transactions.item,Transactions.quantity,Transactions.type,Transactions.price,Bills.total_price FROM  Bills left join Transactions on Bills.bill_id = Transactions.bill_id Where Bills.bill_id = ? Order By Bills.date;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, bill_id);
+			ResultSet rs = statement.executeQuery();
+
+			BillBuilder builder = new BillBuilder();
+			while (rs.next()) {
+				builder.setBillId(rs.getString("bill_id"));
+				builder.setBar(rs.getString("bar"));
+				builder.setDate(rs.getString("date"));
+				builder.setItem(rs.getString("item"));
+				builder.setQuantity(rs.getString("quantity"));
+				builder.setType(rs.getString("type"));
+				builder.setPrice(rs.getString("price"));
+				builder.setTotalPrice(rs.getString("total_price"));
+				builder.setTime(rs.getString("time"));
+				bill.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return bill;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	public boolean addUser(String userId, String password, String firstname, String lastname) {
 		if (conn == null) {
 			System.err.println("DB connection failed");

@@ -1,6 +1,6 @@
 package db;
 import java.sql.DriverManager;
-import java.sql.Statement;
+//import java.sql.Statement;
 import java.sql.Connection;
 
 public class MySQLTableCreation {
@@ -9,7 +9,7 @@ public class MySQLTableCreation {
 		try {
 	// Step 1 Connect to MySQL.
 			System.out.println("Connecting to " + MySQLDBUtil.URL);
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 			Connection conn = DriverManager.getConnection(MySQLDBUtil.URL);
 			
 			if (conn == null) {

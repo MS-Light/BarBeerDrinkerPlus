@@ -34,6 +34,12 @@
   	<description></description>
   	<servlet-class>rpc.GetBeer</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>GetDrinker</servlet-name>
+  	<display-name>GetDrinker</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetDrinker</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>GetBeer</servlet-name>
   	<url-pattern>/getbeer</url-pattern>
@@ -53,5 +59,9 @@
   <servlet-mapping>
   	<servlet-name>SearchBeer</servlet-name>
   	<url-pattern>/searchbeer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetDrinker</servlet-name>
+  	<url-pattern>/getdrinker</url-pattern>
   </servlet-mapping>
 </web-app>
