@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import entity.Beer;
@@ -91,16 +92,16 @@ public class MySQLConnection {
 	
 	
 	
-	public Set<String> getBillID(String username) {
+	public LinkedList<String> getBillID(String username) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
 
-		Set<String> bill_id = new HashSet<>();
+		LinkedList<String> bill_id = new LinkedList<String>();
 
 		try {
-			String sql = "SELECT Bills.bill_id FROM  Bills left join Transactions on Bills.bill_id = Transactions.bill_id Where Bills.drinker = ? group by bill_id Order By Bills.bar, bill_id, Bills.date, Bills.time;";
+			String sql = "SELECT Bills.bar, Bills.date, Bills.time, Bills.bill_id FROM  Bills left join Transactions on Bills.bill_id = Transactions.bill_id Where Bills.drinker = ? group by bill_id Order By Bills.bar, Bills.date, Bills.time;";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);
 			ResultSet rs = statement.executeQuery();
@@ -121,9 +122,9 @@ public class MySQLConnection {
 			return new HashSet<>();
 		}
 		Set<Transactions> transaction = new HashSet<>();
-		Set<String> bill_id = getBillID(username);
+		LinkedList<String> bill_id = getBillID(username);
 
-		for (String a : bill_id) {
+		for (String a: bill_id) {
 			Set<Bill> bill_detail = getBillDetail(a);
 			TransactionsBuilder builder = new TransactionsBuilder();
 			builder.setTransactions_id(a);
@@ -141,7 +142,7 @@ public class MySQLConnection {
 		}
 		Set<Bill> bill = new HashSet<>();
 
-		String sql = "SELECT Bills.bill_id,Bills.bar,Bills.time,Bills.date,Bills.drinker,Transactions.item,Transactions.quantity,Transactions.type,Transactions.price,Bills.total_price FROM  Bills left join Transactions on Bills.bill_id = Transactions.bill_id Where Bills.bill_id = ? Order By Bills.date;";
+		String sql = "SELECT Bills.bill_id,Bills.bar,Bills.time,Bills.date,Bills.drinker,Transactions.item,Transactions.quantity,Transactions.type,Transactions.price,Bills.total_price FROM  Bills left join Transactions on Bills.bill_id = Transactions.bill_id Where Bills.bill_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, bill_id);

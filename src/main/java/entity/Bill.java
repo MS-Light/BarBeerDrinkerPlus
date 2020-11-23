@@ -125,7 +125,7 @@ public class Bill {
 		this.totalPrice = totalPrice;
 	}
 	public String getTime(){
-		return bill_id;
+		return time;
 	}
 	public void setTime(String time) {
 		this.time = time;	

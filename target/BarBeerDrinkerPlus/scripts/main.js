@@ -209,13 +209,47 @@
 		section.appendChild(keyword)
 		li.appendChild(section);
 		
+		var section3 = $create('div');
+		var keyword3 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword3.innerHTML = 'price';
+		section3.appendChild(keyword3);
+		li.appendChild(section3);
+		
+		var section4 = $create('div');
+		var keyword4 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword4.innerHTML = 'type';
+		section4.appendChild(keyword4);
+		li.appendChild(section4);
+		
+		var section5 = $create('div');
+		var keyword5 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword5.innerHTML = 'Total Price';
+		section5.appendChild(keyword5);
+		li.appendChild(section5);
+		
 		var section2 = $create('div');
 		var keyword2 = $create('p', {
-			className : 'drinker-itemtype'
+			className : 'drinker-item'
 		});
-		keyword2.innerHTML = 'type';
+		keyword2.innerHTML = 'date';
 		section2.appendChild(keyword2);
 		li.appendChild(section2);
+		
+		var section6 = $create('div');
+		var keyword6 = $create('p', {
+			className : 'drinker-itemtype'
+		});
+		keyword6.innerHTML = 'time';
+		section6.appendChild(keyword6);
+		li.appendChild(section6);
+		
+		
 		itemList.appendChild(li);
 		for (var i = 0; i < items.length; i++) {
 			addDrinker(itemList, items[i]);
@@ -253,6 +287,14 @@
 		}
 		li.appendChild(section);
 		
+		var section3 = $create('div');
+		for (var i = 0; i < item.Bill.length; i++){
+			// keyword
+			var billdetail = item.Bill[i];
+			addInnerPrice(section3, billdetail);
+		}
+		li.appendChild(section3);
+		
 		var section2 = $create('div');
 		
 		for (var i = 0; i < item.Bill.length; i++){
@@ -261,6 +303,31 @@
 //			addDrinker2(section, billdetail);
 		}
 		li.appendChild(section2);
+		
+		var section4 = $create('div');
+		var totalprice = $create('p', {
+			className : 'drinker-item'
+		});
+		totalprice.innerHTML = billdetail.totalPrice;
+		section4.appendChild(totalprice);
+		li.appendChild(section4);
+		
+		var section5 = $create('div');
+		var key5 = $create('p', {
+			className : 'drinker-item'
+		});
+		key5.innerHTML = billdetail.date;
+		section5.appendChild(key5);
+		li.appendChild(section5);
+		
+		var section6 = $create('div');
+		var time = $create('p', {
+			className : 'drinker-itemtype'
+		});
+		time.innerHTML = billdetail.time;
+		section6.appendChild(time);
+		li.appendChild(section6);
+		
 		itemList.appendChild(li);
 	}
 	function addInnerItem(section,billdetail){
@@ -272,10 +339,17 @@
 	}
 	function addInnerItemtype(section, billdetail){
 		var keyword2 = $create('p', {
-			className : 'drinker-itemtype'
+			className : 'drinker-item'
 		});
 		keyword2.innerHTML = billdetail.type;
 		section.appendChild(keyword2);
+	}
+	function addInnerPrice(section,billdetail){
+		var keyword = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword.innerHTML = billdetail.price;
+		section.appendChild(keyword);
 	}
 	
 	function addItem(itemList, item) {
