@@ -24,8 +24,8 @@
 				loadBeers);
 		document.querySelector('#drinker-btn').addEventListener('click',
 				loadDrinkers);
-		document.querySelector('#search-btn').addEventListener('click',
-				searchDrinkers);
+		document.querySelector('#bar-beer-btn').addEventListener('click',
+				searchBestSellBar);
 	}
 	function validateSession() {
 		onSessionInvalid();
@@ -77,14 +77,35 @@
 		hideElement(loginForm);
 		hideElement(registerForm);
 		
-		loadBeers();
+		loadBars();
 	}
 
 	function loadBars() {
 		console.log('loadBars');
 		activeBtn('bar-btn');
-
-		showLoadingMessage('Loading Bars...');
+		var itemList = document.querySelector('#item-list');
+		itemList.innerHTML ='<div id="bar-form"><label for="beername"> Beer Name: </label><input id="bar_beer_input" name="beer" type="text"><button id="bar-beer-btn">Search Bar</button><button id="bar-beer-consumer">Search Consumers</button><button id="bar-beer-time">Time Distribution</button></div>';
+		document.querySelector('#bar-beer-btn').addEventListener('click',searchBestSellBar);
+		document.querySelector('#bar-beer-consumer').addEventListener('click',searchBiggestConsumers);
+		document.querySelector('#bar-beer-time').addEventListener('click',searchTimeDistributions);
+	}
+	
+	function loadDrinkers() {
+		console.log('loadDrinkers');
+		activeBtn('drinker-btn');
+		var itemList = document.querySelector('#item-list');
+//		itemList.innerHTML = "<input type='text' name='Drinker' value='' >";
+//		var Drinker = document.getElementById('Drinker');
+//		
+//		var btn = document.createElement("BUTTON");
+//		btn.innerHTML = "Search";
+//		btn.addEventListener('click', function() {
+//		    searchDrinkers(Drinker.value);
+//		}, false);
+//		itemList.appendChild(btn);
+		
+		itemList.innerHTML ='<div id="drinker-form"><label for="username">User Name: </label><input id="drinker_username" name="username" type="text"><button id="search-btn">Search</button></div>';
+		document.querySelector('#search-btn').addEventListener('click',searchDrinkers);
 	}
 	
 	function loadBeers() {
@@ -113,26 +134,7 @@
 				function() {
 					showErrorMessage('Cannot load Beers.');
 				});
-	}
-
-	function loadDrinkers() {
-		console.log('loadDrinkers');
-		activeBtn('drinker-btn');
-		var itemList = document.querySelector('#item-list');
-//		itemList.innerHTML = "<input type='text' name='Drinker' value='' >";
-//		var Drinker = document.getElementById('Drinker');
-//		
-//		var btn = document.createElement("BUTTON");
-//		btn.innerHTML = "Search";
-//		btn.addEventListener('click', function() {
-//		    searchDrinkers(Drinker.value);
-//		}, false);
-//		itemList.appendChild(btn);
-		
-		itemList.innerHTML ='<div id="drinker-form"><label for="username">UserName:</label><input id="drinker_username" name="username" type="text"><button id="search-btn">Search</button></div>';
-		document.querySelector('#search-btn').addEventListener('click',searchDrinkers);
-	}
-	
+	}	
 	
 	function $create(tag, options) {
 		var element = document.createElement(tag);
@@ -143,7 +145,32 @@
 		}
 		return element;
 	}
-	
+	function searchBestSellBar(){
+		var beername = document.querySelector('#bar_beer_input').value;
+		var url = './getbestsellbar?beer='+beername;
+		var data = null;
+		showLoadingMessage('Loading Bars...');
+		ajax('GET', url, data,
+				function(res) {
+					var items = JSON.parse(res);
+					if (!items || items.length === 0) {
+						showWarningMessage('No Bars.');
+					} else {
+						showLoadingMessage('Loading items...');
+						listBestSellBar(items, beername);
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load Drinker.');
+				});
+	}
+	function searchBiggestConsumers(){
+		
+	}
+	function searchTimeDistributions(){
+		
+	}
 	function searchDrinkers(){
 		// display loading message
 //		showLoadingMessage('Loading Drinkers...');
@@ -184,6 +211,26 @@
 			addItem(itemList, items[i]);
 		}
 	}
+	function listBestSellBar(items,beer){
+		var itemList = document.querySelector('#item-list');
+		itemList.innerHTML = ''; // clear current results
+		var li = $create('li', {
+			id : 'item-protocal',
+			className : 'drinker'
+		});
+		// section
+		var section0 = $create('div');
+		var title = $create('a', {
+			className : 'drinker-title-big',
+		});
+		title.innerHTML = 'Top Five bars where '+beer+' sells the most:';
+		section0.appendChild(title);
+		li.appendChild(section0);
+		itemList.appendChild(li);
+		for (var i = 0; i < items.length; i++) {
+			addBestSellBars(itemList, items[i]);
+		}
+	}
 	function listDrinker(items) {
 		var itemList = document.querySelector('#item-list');
 		//itemList.innerHTML = ''; // clear current results
@@ -208,6 +255,14 @@
 		keyword.innerHTML = 'item';
 		section.appendChild(keyword)
 		li.appendChild(section);
+		
+		var section7 = $create('div');
+		var keyword7 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword7.innerHTML = 'Quantity';
+		section7.appendChild(keyword7)
+		li.appendChild(section7);
 		
 		var section3 = $create('div');
 		var keyword3 = $create('p', {
@@ -287,6 +342,14 @@
 		}
 		li.appendChild(section);
 		
+		var section7 = $create('div');
+		for (var i = 0; i < item.Bill.length; i++){
+			// keyword
+			var billdetail = item.Bill[i];
+			addInnerQuantity(section7, billdetail);
+		}
+		li.appendChild(section7);
+		
 		var section3 = $create('div');
 		for (var i = 0; i < item.Bill.length; i++){
 			// keyword
@@ -329,6 +392,14 @@
 		li.appendChild(section6);
 		
 		itemList.appendChild(li);
+	}
+	
+	function addInnerQuantity(section, billdetail){
+		var keyword = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword.innerHTML = billdetail.quantity;
+		section.appendChild(keyword);
 	}
 	function addInnerItem(section,billdetail){
 		var keyword = $create('p', {
@@ -378,6 +449,24 @@
 		keyword.innerHTML = item.manf;
 		section.appendChild(keyword);
 
+		li.appendChild(section);
+		itemList.appendChild(li);
+	}
+	function addBestSellBars(itemList, item) {
+		// create the <li> tag and specify the id and class attributes
+		var li = $create('li', {
+			className : 'beer'
+		});
+
+		// section
+		var section = $create('div');
+
+		// title
+		var title = $create('a', {
+			className : 'beer-name',
+		});
+		title.innerHTML = item.bar;
+		section.appendChild(title);
 		li.appendChild(section);
 		itemList.appendChild(li);
 	}

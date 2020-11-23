@@ -67,13 +67,10 @@ public class MySQLConnection {
 			return new HashSet<>();
 		}
 		Set<Beer> BeersInfo = new HashSet<>();
-//		Set<String> BeersID = getBeers();
 
 		String sql = "SELECT * FROM Beer";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
-//			for (String name : BeersID) {
-//				statement.setString(1, name);
 				ResultSet rs = statement.executeQuery();
 
 				BeerBuilder builder = new BeerBuilder();
@@ -82,14 +79,93 @@ public class MySQLConnection {
 					builder.setManf(rs.getString("manf"));
 					BeersInfo.add(builder.build());
 				}
-//			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
+	public Set<Beer> getLargestSpenders(String barname) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashSet<>();
+		}
+		Set<Beer> BeersInfo = new HashSet<>();
+		String sql = "SELECT sum(total_price),b.drinker From Bills b" + 
+				" Where b.bar = ?" + 
+				" Group By b.drinker" + 
+				" Order By sum(total_price)" + 
+				" DESC" + 
+				" limit 10;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, barname);
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("sum(total_price)"));
+				builder.setManf(rs.getString("drinker"));
+				BeersInfo.add(builder.build());
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return BeersInfo;
 	}
 	
-	
+	public Set<Beer> getPopularBeers(String barname) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashSet<>();
+		}
+		Set<Beer> BeersInfo = new HashSet<>();
+		String sql = "SELECT Beer.name, sum(Transactions.quantity)FROM Beer, Bills left join Transactions on Bills.bill_id = Transactions.bill_id" + 
+				" Where Transactions.item = Beer.name and Bills.bar = ?" + 
+				" Group by Transactions.item" + 
+				" Order By sum(Transactions.quantity)" + 
+				" DESC" + 
+				" LIMIT 10;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, barname);
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("name"));
+				builder.setManf(rs.getString("sum(Transactions.quantity)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
+	public Set<Beer> getBestManufacturers(String barname) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashSet<>();
+		}
+		Set<Beer> BeersInfo = new HashSet<>();
+		String sql = "SELECT Beer.manf, sum(Transactions.quantity) FROM Beer, Bills left join Transactions on Bills.bill_id = Transactions.bill_id" + 
+				" Where Transactions.item = Beer.name and Bills.bar = ?" + 
+				"Group by Beer.manf " + 
+				"Order By sum(Transactions.quantity) " + 
+				"DESC " + 
+				"LIMIT 10;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, barname);
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("manf"));
+				builder.setManf(rs.getString("sum(Transactions.quantity)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
 	
 	
 	public LinkedList<String> getBillID(String username) {
@@ -114,6 +190,35 @@ public class MySQLConnection {
 		}
 
 		return bill_id;
+	}
+	
+	public LinkedList<String> getBestSellBar(String beer) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+
+		LinkedList<String> bar = new LinkedList<String>();
+
+		try {
+			String sql = "SELECT Beer.name , Beer.manf,sum(Transactions.quantity),Bills.bar from Beer , Transactions left join Bills on Transactions.bill_id = Bills.bill_id" + 
+					" Where Transactions.item = ? and Transactions.item = Beer.name" + 
+					" Group By Bills.bar" + 
+					" Order By sum(Transactions.quantity)" + 
+					" Desc" + 
+					" Limit 5;";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, beer);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				String beerN = rs.getString("bar");
+				bar.add(beerN);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return bar;
 	}
 	
 	public Set<Transactions> getTransactions(String username) {

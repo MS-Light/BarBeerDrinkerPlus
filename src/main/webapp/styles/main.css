@@ -331,6 +331,12 @@ ul {
 	margin-left: 10px;
 	margin-right: 10px;
 }
+.drinker-title-big {
+	color: #624630;
+	font-weight: 500;
+	text-decoration: none;
+	text-align: center;
+}
 .drinker-title {
 	color: #624630;
 	font-weight: 400;

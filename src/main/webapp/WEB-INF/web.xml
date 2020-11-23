@@ -40,6 +40,30 @@
   	<description></description>
   	<servlet-class>rpc.GetDrinker</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>GetBestSellBar</servlet-name>
+  	<display-name>GetBestSellBar</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBestSellBar</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetLargestSpender</servlet-name>
+  	<display-name>GetLargestSpender</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetLargestSpender</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetPopularBeers</servlet-name>
+  	<display-name>GetPopularBeers</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetPopularBeers</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetBestManufacturers</servlet-name>
+  	<display-name>GetBestManufacturers</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBestManufacturers</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>GetBeer</servlet-name>
   	<url-pattern>/getbeer</url-pattern>
@@ -63,5 +87,21 @@
   <servlet-mapping>
   	<servlet-name>GetDrinker</servlet-name>
   	<url-pattern>/getdrinker</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBestSellBar</servlet-name>
+  	<url-pattern>/getbestsellbar</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetLargestSpender</servlet-name>
+  	<url-pattern>/getlargestspender</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetPopularBeers</servlet-name>
+  	<url-pattern>/getpopularbeers</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBestManufacturers</servlet-name>
+  	<url-pattern>/getbestmanufacturers</url-pattern>
   </servlet-mapping>
 </web-app>

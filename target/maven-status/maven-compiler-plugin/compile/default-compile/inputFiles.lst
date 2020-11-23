@@ -1,7 +1,9 @@
+/Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/GetLargestSpender.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/Login.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/Calculate.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/Logout.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/db/MySQLConnection.java
+/Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/GetBestManufacturers.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/GetBeer.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/entity/Transactions.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/GetDrinker.java
@@ -11,4 +13,6 @@
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/RpcHelper.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/entity/Beer.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/db/MySQLDBUtil.java
+/Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/GetBestSellBar.java
 /Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/entity/OneForAll.java
+/Users/yanbojiang/eclipse-workspace/BarBeerDrinkerPlus/src/main/java/rpc/GetPopularBeers.java
