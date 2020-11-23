@@ -1,7 +1,7 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.LinkedList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +34,7 @@ public class GetBeer extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		MySQLConnection connection = new MySQLConnection();
-		Set<Beer> beers = connection.getBeersInfo();
+		LinkedList<Beer> beers = connection.getBeersInfo();
 		connection.close();
 		
 		JSONArray array = new JSONArray();

@@ -1,7 +1,7 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.LinkedList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,7 +35,7 @@ public class GetBestManufacturers extends HttpServlet {
 		// TODO Auto-generated method stub
 		String barname = request.getParameter("bar");
 		MySQLConnection connection = new MySQLConnection();
-		Set<Beer> beers = connection.getBestManufacturers(barname);
+		LinkedList<Beer> beers = connection.getBestManufacturers(barname);
 		connection.close();
 		
 		JSONArray array = new JSONArray();

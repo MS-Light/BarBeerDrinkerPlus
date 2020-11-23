@@ -4,9 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 import entity.Beer;
 import entity.Beer.BeerBuilder;
@@ -39,13 +37,13 @@ public class MySQLConnection {
 		}
 	}
 	
-	public Set<String> getBeers() {
+	public LinkedList<String> getBeers() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
 
-		Set<String> beer = new HashSet<>();
+		LinkedList<String> beer = new LinkedList<>();
 
 		try {
 			String sql = "SELECT name FROM Beer";
@@ -61,12 +59,12 @@ public class MySQLConnection {
 
 		return beer;
 	}
-	public Set<Beer> getBeersInfo() {
+	public LinkedList<Beer> getBeersInfo() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
-		Set<Beer> BeersInfo = new HashSet<>();
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
 
 		String sql = "SELECT * FROM Beer";
 		try {
@@ -84,12 +82,12 @@ public class MySQLConnection {
 		}
 		return BeersInfo;
 	}
-	public Set<Beer> getLargestSpenders(String barname) {
+	public LinkedList<Beer> getLargestSpenders(String barname) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
-		Set<Beer> BeersInfo = new HashSet<>();
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
 		String sql = "SELECT b.drinker, sum(total_price) From Bills b" + 
 				" Where b.bar = ?" + 
 				" Group By b.drinker" + 
@@ -112,12 +110,12 @@ public class MySQLConnection {
 		return BeersInfo;
 	}
 	
-	public Set<Beer> getPopularBeers(String barname) {
+	public LinkedList<Beer> getPopularBeers(String barname) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
-		Set<Beer> BeersInfo = new HashSet<>();
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
 		String sql = "SELECT Beer.name, sum(Transactions.quantity)FROM Beer, Bills left join Transactions on Bills.bill_id = Transactions.bill_id" + 
 				" Where Transactions.item = Beer.name and Bills.bar = ?" + 
 				" Group by Transactions.item" + 
@@ -139,12 +137,12 @@ public class MySQLConnection {
 		}
 		return BeersInfo;
 	}
-	public Set<Beer> getBestManufacturers(String barname) {
+	public LinkedList<Beer> getBestManufacturers(String barname) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
-		Set<Beer> BeersInfo = new HashSet<>();
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
 		String sql = "SELECT Beer.manf, sum(Transactions.quantity) FROM Beer, Bills left join Transactions on Bills.bill_id = Transactions.bill_id" + 
 				" Where Transactions.item = Beer.name and Bills.bar = ?" + 
 				"Group by Beer.manf " + 
@@ -221,16 +219,16 @@ public class MySQLConnection {
 		return bar;
 	}
 	
-	public Set<Transactions> getTransactions(String username) {
+	public LinkedList<Transactions> getTransactions(String username) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
-		Set<Transactions> transaction = new HashSet<>();
+		LinkedList<Transactions> transaction = new LinkedList<>();
 		LinkedList<String> bill_id = getBillID(username);
 
 		for (String a: bill_id) {
-			Set<Bill> bill_detail = getBillDetail(a);
+			LinkedList<Bill> bill_detail = getBillDetail(a);
 			TransactionsBuilder builder = new TransactionsBuilder();
 			builder.setTransactions_id(a);
 			builder.setBills(bill_detail);
@@ -240,12 +238,12 @@ public class MySQLConnection {
 	}
 	
 	
-	public Set<Bill> getBillDetail(String bill_id) {
+	public LinkedList<Bill> getBillDetail(String bill_id) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new LinkedList<>();
 		}
-		Set<Bill> bill = new HashSet<>();
+		LinkedList<Bill> bill = new LinkedList<>();
 
 		String sql = "SELECT Bills.bill_id,Bills.bar,Bills.time,Bills.date,Bills.drinker,Transactions.item,Transactions.quantity,Transactions.type,Transactions.price,Bills.total_price FROM  Bills left join Transactions on Bills.bill_id = Transactions.bill_id Where Bills.bill_id = ?";
 		try {

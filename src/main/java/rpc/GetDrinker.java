@@ -1,7 +1,7 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.LinkedList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +36,7 @@ public class GetDrinker extends HttpServlet {
 		String username = request.getParameter("username");
 		
 		MySQLConnection connection = new MySQLConnection();
-		Set<Transactions> transactions = connection.getTransactions(username);
+		LinkedList<Transactions> transactions = connection.getTransactions(username);
 		connection.close();
 		
 		JSONArray array = new JSONArray();
