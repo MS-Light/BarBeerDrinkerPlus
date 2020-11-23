@@ -24,8 +24,8 @@
 				loadBeers);
 		document.querySelector('#drinker-btn').addEventListener('click',
 				loadDrinkers);
-		document.querySelector('#bar-beer-btn').addEventListener('click',
-				searchBestSellBar);
+//		document.querySelector('#bar-beer-btn').addEventListener('click',
+//				searchBestSellBar);
 	}
 	function validateSession() {
 		onSessionInvalid();
@@ -77,17 +77,17 @@
 		hideElement(loginForm);
 		hideElement(registerForm);
 		
-		loadBars();
+		loadBeers();
 	}
 
-	function loadBars() {
-		console.log('loadBars');
-		activeBtn('bar-btn');
+	function loadBeers() {
+		console.log('loadBeers');
+		activeBtn('beer-btn');
 		var itemList = document.querySelector('#item-list');
-		itemList.innerHTML ='<div id="bar-form"><label for="beername"> Beer Name: </label><input id="bar_beer_input" name="beer" type="text"><button id="bar-beer-btn">Search Bar</button><button id="bar-beer-consumer">Search Consumers</button><button id="bar-beer-time">Time Distribution</button></div>';
-		document.querySelector('#bar-beer-btn').addEventListener('click',searchBestSellBar);
-		document.querySelector('#bar-beer-consumer').addEventListener('click',searchBiggestConsumers);
-		document.querySelector('#bar-beer-time').addEventListener('click',searchTimeDistributions);
+		itemList.innerHTML ='<div id="bar-form"><label for="beername"> Beer Name: </label><input id="beer_beer_input" name="beer" type="text"><button id="beer-beer-btn">Search Bar</button><button id="beer-beer-consumer">Search Consumers</button><button id="bar-beer-time">Time Distribution</button></div>';
+		document.querySelector('#beer-beer-btn').addEventListener('click',searchBestSellBar);
+		document.querySelector('#beer-beer-consumer').addEventListener('click',searchBiggestConsumers);
+		document.querySelector('#beer-beer-time').addEventListener('click',searchTimeDistributions);
 	}
 	
 	function loadDrinkers() {
@@ -108,11 +108,23 @@
 		document.querySelector('#search-btn').addEventListener('click',searchDrinkers);
 	}
 	
-	function loadBeers() {
-		console.log('loadBeers');
-		activeBtn('beer-btn');
+	function loadBars() {
+		console.log('loadbars');
+		activeBtn('bar-btn');
+		var itemList = document.querySelector('#item-list');
+		itemList.innerHTML ='<div id="bar-form"><label for="barname"> Bar Name: </label><input id="bar_beer_input" name="beer" type="text"><button id="bar-largest-spender">Largest spenders</button><button id="bar-popular-beer">Most popular beer</button><button id="bar-manufacture">Most sells manufacturers</button></div>';
+		document.querySelector('#bar-largest-spender').addEventListener('click',searchBar1);
+		document.querySelector('#bar-popular-beer').addEventListener('click',searchBar2);
+		document.querySelector('#bar-manufacture').addEventListener('click',searchBar3);
+	}
+	function searchBar1(){searchBar('getlargestspender');}
+	function searchBar2(){searchBar('getpopularbeers');}
+	function searchBar3(){searchBar('getbestmanufacturers');}
+	
+	function searchBar(input){
 		// request parameters
-		var url = './getbeer';
+		var barname = document.querySelector('#bar_beer_input').value;
+		var url = './'+input+'?bar='+barname;
 		var data = null;
 
 		// display loading message
@@ -124,7 +136,7 @@
 				function(res) {
 					var items = JSON.parse(res);
 					if (!items || items.length === 0) {
-						showWarningMessage('No Beers. Make sure you have Beers on the list.');
+						showWarningMessage('No Bars. Make sure you have Bars on the list.xx');
 					} else {
 						showLoadingMessage('Loading items...');
 						listItems(items);
@@ -134,7 +146,8 @@
 				function() {
 					showErrorMessage('Cannot load Beers.');
 				});
-	}	
+	}
+	
 	
 	function $create(tag, options) {
 		var element = document.createElement(tag);
@@ -146,7 +159,7 @@
 		return element;
 	}
 	function searchBestSellBar(){
-		var beername = document.querySelector('#bar_beer_input').value;
+		var beername = document.querySelector('#beer_beer_input').value;
 		var url = './getbestsellbar?beer='+beername;
 		var data = null;
 		showLoadingMessage('Loading Bars...');

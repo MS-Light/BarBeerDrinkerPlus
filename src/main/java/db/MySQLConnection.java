@@ -90,7 +90,7 @@ public class MySQLConnection {
 			return new HashSet<>();
 		}
 		Set<Beer> BeersInfo = new HashSet<>();
-		String sql = "SELECT sum(total_price),b.drinker From Bills b" + 
+		String sql = "SELECT b.drinker, sum(total_price) From Bills b" + 
 				" Where b.bar = ?" + 
 				" Group By b.drinker" + 
 				" Order By sum(total_price)" + 
