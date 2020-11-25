@@ -11,6 +11,7 @@ db/MySQLConnection.class
 entity/Transactions$TransactionsBuilder.class
 entity/Beer$BeerBuilder.class
 rpc/Calculate.class
+entity/Bartender$1.class
 entity/Bill.class
 entity/OneForAll.class
 db/MySQLTableCreation.class

@@ -24,6 +24,10 @@
 				loadBeers);
 		document.querySelector('#drinker-btn').addEventListener('click',
 				loadDrinkers);
+		document.querySelector('#bartender-btn').addEventListener('click',
+				loadBartender);
+		document.querySelector('#manufacturer-btn').addEventListener('click',
+				loadManufacturer);
 //		document.querySelector('#bar-beer-btn').addEventListener('click',
 //				searchBestSellBar);
 	}
@@ -121,6 +125,22 @@
 	function searchBar2(){searchBar('getpopularbeers');}
 	function searchBar3(){searchBar('getbestmanufacturers');}
 	
+	function loadBartender(){
+		console.log('loadbartender');
+		activeBtn('bartender-btn');
+		var itemList = document.querySelector('#item-list');
+		itemList.innerHTML ='<div id="bartender-form"><label for="bartendername"> Bartender Name: </label><input id="bartender_name_input" name="bartender" type="text"><label for="barname"> Bar Name: </label><input id="bartender_bar_input" name="bar" type="text"><button id="bartender-shift-btn">Bartender Shifts</button><button id="bartender-beer-sold">Most Sold beers</button>';
+		document.querySelector('#bartender-shift-btn').addEventListener('click',searchBartenderShift);
+		document.querySelector('#bartender-beer-sold').addEventListener('click',searchBartenderSold);
+	}
+	function loadManufacturer(){
+		console.log('loadmanufacturer');
+		activeBtn('manufacturer-btn');
+		var itemList = document.querySelector('#item-list');
+		itemList.innerHTML ='<div id="manufacturer-form"><label for="manufacturername"> Manufacturer Name: </label><input id="manufacturer_name_input" name="manufacturer" type="text"><button id="manufacturer-region">Highest Sell</button><button id="manufacturer-Beer">Beers are liked the most</button>';
+		document.querySelector('#manufacturer-region').addEventListener('click',searchManufacturerRegion);
+		document.querySelector('#manufacturer-Beer').addEventListener('click',searchManufacturerBeer);
+	}
 	function searchBar(input){
 		// request parameters
 		var barname = document.querySelector('#bar_beer_input').value;
@@ -158,6 +178,49 @@
 		}
 		return element;
 	}
+	function searchBartenderShift(){
+		var bartender = document.querySelector('#bartender_name_input').value;
+		var bar = document.querySelector('#bartender_bar_input').value;
+		var url = './getbartendershifts?bartender='+bartender+'&bar='+bar;
+		var data = null;
+		showLoadingMessage('Loading Bartender...');
+		ajax('GET', url, data,
+				function(res) {
+					var items = JSON.parse(res);
+					if (!items || items.length === 0) {
+						showWarningMessage('No such Bartender.');
+					} else {
+						showLoadingMessage('Loading Bartender...');
+						listBartenderShift(items);
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load Drinker.');
+				});
+	}
+	
+	function searchBartenderSold(){
+		var bartender = document.querySelector('#bartender_name_input').value;
+		var bar = document.querySelector('#bartender_bar_input').value;
+		var url = './getbartendersold?bartender='+bartender+'&bar='+bar;
+		var data = null;
+		showLoadingMessage('Loading Bartender...');
+		ajax('GET', url, data,
+				function(res) {
+					var items = JSON.parse(res);
+					if (!items || items.length === 0) {
+						showWarningMessage('No such Bartender.');
+					} else {
+						showLoadingMessage('Loading Bartender...');
+						listItems(items);
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load Drinker.');
+				});
+	}
 	function searchBestSellBar(){
 		var beername = document.querySelector('#beer_beer_input').value;
 		var url = './getbestsellbar?beer='+beername;
@@ -190,7 +253,7 @@
 		var userid = document.querySelector('#drinker_username').value;
 		
 		var url = './getdrinker?username='+userid;
-		var data = null
+		var data = null;
 
 		ajax('GET', url, data,
 		function(res) {
@@ -208,6 +271,47 @@
 		});
 	}
 
+	
+	function searchManufacturerRegion(){
+		var manufacturer = document.querySelector('#manufacturer_name_input').value;
+		var url = './gethighestregion?manufacturer='+manufacturer;
+		var data = null;
+		ajax('GET', url, data,
+		function(res) {
+			var items = JSON.parse(res);
+			if (!items || items.length === 0) {
+				showWarningMessage('No Sells.');
+			} else {
+				showLoadingMessage('Loading items...');
+				listItems(items);
+			}
+		},
+		// failed callback
+		function() {
+			showErrorMessage('Cannot load Drinker.');
+		});
+	}
+	
+	function searchManufacturerBeer(){
+		var manufacturer = document.querySelector('#manufacturer_name_input').value;
+		var url = './getmostlikes?manufacturer='+manufacturer;
+		var data = null;
+		ajax('GET', url, data,
+		function(res) {
+			var items = JSON.parse(res);
+			if (!items || items.length === 0) {
+				showWarningMessage('No Likes.');
+			} else {
+				showLoadingMessage('Loading items...');
+				listItems(items);
+			}
+		},
+		// failed callback
+		function() {
+			showErrorMessage('Cannot load Drinker.');
+		});
+	}
+	
 	// -------------------------------------
 	// Create item list
 	// -------------------------------------
@@ -242,6 +346,52 @@
 		itemList.appendChild(li);
 		for (var i = 0; i < items.length; i++) {
 			addBestSellBars(itemList, items[i]);
+		}
+	}
+	function listBartenderShift(items){
+		var itemList = document.querySelector('#item-list');
+		//itemList.innerHTML = ''; // clear current results
+		itemList.innerHTML = '';
+		var li = $create('li', {
+			id : 'item-protocal',
+			className : 'drinker'
+		});
+		
+		var section4 = $create('div');
+		var keyword4 = $create('p', {
+			className : 'drinker-title'
+		});
+		keyword4.innerHTML = 'Date';
+		section4.appendChild(keyword4);
+		li.appendChild(section4);
+		
+		var section5 = $create('div');
+		var keyword5 = $create('p', {
+			className : 'drinker-itemtype'
+		});
+		keyword5.innerHTML = 'Day';
+		section5.appendChild(keyword5);
+		li.appendChild(section5);
+		
+		var section7 = $create('div');
+		var keyword7 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword7.innerHTML = 'Start';
+		section7.appendChild(keyword7)
+		li.appendChild(section7);
+		
+		var section3 = $create('div');
+		var keyword3 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword3.innerHTML = 'End';
+		section3.appendChild(keyword3);
+		li.appendChild(section3);
+		
+		itemList.appendChild(li);
+		for (var i = 0; i < items.length; i++) {
+			addBartenderShifts(itemList, items[i]);
 		}
 	}
 	function listDrinker(items) {
@@ -328,6 +478,47 @@
 //		let html = json2html.transform(item,transform);
 //		itemList.appendChild(html);
 //	}
+	function addBartenderShifts(itemList, item){
+		// create the <li> tag and specify the id and class attributes
+		var li = $create('li', {
+			className : 'drinker'
+		});
+		// section
+		var section2 = $create('div');
+		var keyword2 = $create('p', {
+			className : 'drinker-title'
+		});
+		keyword2.innerHTML = item.date;
+		section2.appendChild(keyword2);
+		li.appendChild(section2);
+		
+		var section4 = $create('div');
+		var totalprice = $create('p', {
+			className : 'drinker-itemtype'
+		});
+		totalprice.innerHTML = item.day;
+		section4.appendChild(totalprice);
+		li.appendChild(section4);
+		
+		var section7 = $create('div');
+		var keyword7 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword7.innerHTML = item.start;
+		section7.appendChild(keyword7);
+		li.appendChild(section7);
+		
+		var section3 = $create('div');
+		var keyword3 = $create('p', {
+			className : 'drinker-item'
+		});
+		keyword3.innerHTML = item.end;
+		section3.appendChild(keyword3);
+		li.appendChild(section3);
+		
+		
+		itemList.appendChild(li);
+	}
 	function addDrinker(itemList, item){
 		var item_id = item.Transactions_id;
 		// create the <li> tag and specify the id and class attributes

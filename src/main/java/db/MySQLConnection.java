@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+import entity.Bartender;
+import entity.Bartender.BartenderBuilder;
 import entity.Beer;
 import entity.Beer.BeerBuilder;
 import entity.Bill;
@@ -270,10 +272,118 @@ public class MySQLConnection {
 		return bill;
 	}
 	
+	public LinkedList<Bartender> getBartenderShifts(String name, String bar) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<Bartender> BartenderInfo = new LinkedList<>();
+		String sql = "SELECT  Shifts.* From Beer,(Bills left join Shifts on Bills.bartender = Shifts.bartender) Left join Transactions on Bills.bill_id = Transactions.bill_id" + 
+				" WHERE Bills.bartender = ? and Bills.bar = ? and Beer.name = Transactions.item" + 
+				" Group by Beer.manf,Shifts.date;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, name);
+			statement.setString(2, bar);
+			ResultSet rs = statement.executeQuery();
+			BartenderBuilder builder = new BartenderBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("bartender"));
+				builder.setBar(rs.getString("bar"));
+				builder.setStart(rs.getString("start"));
+				builder.setEnd(rs.getString("end"));
+				builder.setDay(rs.getString("day"));
+				builder.setDate(rs.getString("date"));
+				BartenderInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BartenderInfo;
+	}
+	public LinkedList<Beer> getBartenderSold(String name, String bar) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
+		String sql = "SELECT distinct Beer.manf, sum(Transactions.quantity)From Beer,(Bills left join Shifts on Bills.bartender = Shifts.bartender) Left join Transactions on Bills.bill_id = Transactions.bill_id" + 
+				" WHERE Bills.bartender = ? and Bills.bar = ?" + 
+				"and Beer.name = Transactions.item " + 
+				"Group by Beer.manf,Bills.bartender " + 
+				"Order by sum(Transactions.quantity) " + 
+				"Desc ;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, name);
+			statement.setString(2, bar);
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("manf"));
+				builder.setManf(rs.getString("sum(Transactions.quantity)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
 	
 	
+	public LinkedList<Beer> getHighestRegion(String manufacture) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
+		String sql = "SELECT Drinker.state,sum(Transactions.quantity * Transactions.price) From ((Bills left join Transactions on Bills.bill_id = Transactions.bill_id)left join Beer on Transactions.item = Beer.name)left join Drinker on Drinker.name = Bills.drinker" + 
+				" Where Transactions.type = 'beer' and Beer.manf = ?" + 
+				" group by Drinker.state" + 
+				" Order by sum(Transactions.quantity * Transactions.price)" + 
+				" DESC;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, manufacture+"\n");
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("state"));
+				builder.setManf(rs.getString("sum(Transactions.quantity * Transactions.price)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
 	
-	
+	public LinkedList<Beer> getHighestLikes(String manufacture) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
+		String sql = "Select Drinker.state,count(Beer.name) FROM (Likes left join Drinker on Likes.drinker = Drinker.name) left join Beer on Likes.beer = Beer.name" + 
+				" where Beer.manf = ?" + 
+				" Group by Drinker.state" + 
+				" Order by count(Beer.name)" + 
+				" DESC;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, manufacture+"\n");
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("state"));
+				builder.setManf(rs.getString("count(Beer.name)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
 	
 	
 	

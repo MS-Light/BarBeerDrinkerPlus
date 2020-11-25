@@ -64,6 +64,36 @@
   	<description></description>
   	<servlet-class>rpc.GetBestManufacturers</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>GetBartenderShifts</servlet-name>
+  	<display-name>GetBartenderShifts</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBartenderShifts</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>getBartenderSold</servlet-name>
+  	<display-name>getBartenderSold</display-name>
+  	<description></description>
+  	<servlet-class>rpc.getBartenderSold</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetHighestRegion</servlet-name>
+  	<display-name>GetHighestRegion</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetHighestRegion</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetHigghestLikes</servlet-name>
+  	<display-name>GetHigghestLikes</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetHigghestLikes</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetMostLikes</servlet-name>
+  	<display-name>GetMostLikes</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetMostLikes</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>GetBeer</servlet-name>
   	<url-pattern>/getbeer</url-pattern>
@@ -103,5 +133,25 @@
   <servlet-mapping>
   	<servlet-name>GetBestManufacturers</servlet-name>
   	<url-pattern>/getbestmanufacturers</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBartenderShifts</servlet-name>
+  	<url-pattern>/getbartendershifts</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>getBartenderSold</servlet-name>
+  	<url-pattern>/getbartendersold</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetHighestRegion</servlet-name>
+  	<url-pattern>/gethighestregion</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetHigghestLikes</servlet-name>
+  	<url-pattern>/gethighestlikes</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetMostLikes</servlet-name>
+  	<url-pattern>/getmostlikes</url-pattern>
   </servlet-mapping>
 </web-app>
