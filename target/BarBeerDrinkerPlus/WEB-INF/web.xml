@@ -94,6 +94,66 @@
   	<description></description>
   	<servlet-class>rpc.GetMostLikes</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>GetDrinkerOrderMost</servlet-name>
+  	<display-name>GetDrinkerOrderMost</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetDrinkerOrderMost</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetBusiestPeriods</servlet-name>
+  	<display-name>GetBusiestPeriods</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBusiestPeriods</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>Modify</servlet-name>
+  	<display-name>Modify</display-name>
+  	<description></description>
+  	<servlet-class>rpc.Modify</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>Sample1</servlet-name>
+  	<display-name>Sample1</display-name>
+  	<description></description>
+  	<servlet-class>rpc.Sample1</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>Insert</servlet-name>
+  	<display-name>Insert</display-name>
+  	<description></description>
+  	<servlet-class>rpc.Insert</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetDrinkerSpendingDay</servlet-name>
+  	<display-name>GetDrinkerSpendingDay</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetDrinkerSpendingDay</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetDrinkerSpendingMonth</servlet-name>
+  	<display-name>GetDrinkerSpendingMonth</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetDrinkerSpendingMonth</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetDistributionSales</servlet-name>
+  	<display-name>GetDistributionSales</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetDistributionSales</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetBiggestConsumer</servlet-name>
+  	<display-name>GetBiggestConsumer</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBiggestConsumer</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetBeerTimeDistribution</servlet-name>
+  	<display-name>GetBeerTimeDistribution</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBeerTimeDistribution</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>GetBeer</servlet-name>
   	<url-pattern>/getbeer</url-pattern>
@@ -153,5 +213,45 @@
   <servlet-mapping>
   	<servlet-name>GetMostLikes</servlet-name>
   	<url-pattern>/getmostlikes</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetDrinkerOrderMost</servlet-name>
+  	<url-pattern>/getdrinkerordermost</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBusiestPeriods</servlet-name>
+  	<url-pattern>/getbusiestperiods</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Modify</servlet-name>
+  	<url-pattern>/modify</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Sample1</servlet-name>
+  	<url-pattern>/Sample1</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Insert</servlet-name>
+  	<url-pattern>/insert</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetDrinkerSpendingDay</servlet-name>
+  	<url-pattern>/getdrinkerspendingday</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetDrinkerSpendingMonth</servlet-name>
+  	<url-pattern>/getdrinkerspendingmonth</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetDistributionSales</servlet-name>
+  	<url-pattern>/getdistributionsales</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBiggestConsumer</servlet-name>
+  	<url-pattern>/getbiggestconsumer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBeerTimeDistribution</servlet-name>
+  	<url-pattern>/getbeertimedistribution</url-pattern>
   </servlet-mapping>
 </web-app>

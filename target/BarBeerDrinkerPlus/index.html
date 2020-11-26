@@ -8,6 +8,7 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="styles/main.css">
+  
 </head>
 <body>
   <header class="top-header">
@@ -59,14 +60,14 @@
           <i class="fa fa-sitemap fa-2x"></i>
         </div>
         <nav class="main-nav">
+          <a href="#" id="drinker-btn" class="main-nav-btn">
+            <i class="fa fa-user-tie"></i> Drinker
+          </a>
           <a href="#" id="bar-btn" class="main-nav-btn active">
             <i class="fas fa-beer"></i> Bar
           </a>
           <a href="#" id="beer-btn" class="main-nav-btn">
             <i class="fa fa-glass-cheers"></i> Beer
-          </a>
-          <a href="#" id="drinker-btn" class="main-nav-btn">
-            <i class="fa fa-user-tie"></i> Drinker
           </a>
           <a href="#" id="bartender-btn" class="main-nav-btn">
             <i class="fa fa-user-clock"></i> Bartender
@@ -74,10 +75,209 @@
           <a href="#" id="manufacturer-btn" class="main-nav-btn">
             <i class="fa fa-user-clock"></i> Manufacturer
           </a>
+          <a href="#" id="insert-btn" class="main-nav-btn">
+            <i class="fa fa-user-clock"></i> Insert
+          </a>
         </nav>
       </aside>
+      <div id="insert-form">
+      	<div id="insert-drinker">
+	        <label for="name">Drinker: *</label>
+	        <input id="insert-input-drinker" name="drinker" type="text">
+	    </div>
+		<div id="insert-state">
+			<label for="state">State: *</label>
+			<input id="insert-input-state" name="state" type="text">
+		</div>
+		
+		<div id="insert-manf">
+		        <label for="manf">Manufacturer: *</label>
+		        <input id="insert-input-manf" name="manf" type="text">
+		</div>
+		<div id="insert-beer">
+		        <label for="beer">Beer: *</label>
+		        <input id="insert-input-beer" name="beer" type="text">
+		</div>
+		<div id="insert-bar">
+		        <label for="bar">Bar: *</label>
+		        <input id="insert-input-bar" name="bar" type="text">
+		</div>
+		<div id="insert-date">
+		        <label for="date">Date: *</label>
+		        <input id="insert-input-date" name="date" type="text">
+		</div>
+		<div id="insert-itemid">
+		        <label for="itemid">Item_id: *</label>
+		        <input id="insert-input-itemid" name="itemid" type="text">
+		</div>
+		<div id="insert-day">
+		        <label for="day">Day: *</label>
+		        <input id="insert-input-day" name="day" type="text">
+		</div>
+		<div id="insert-phone">
+		        <label for="phone">Phone: *</label>
+		        <input id="insert-input-phone" name="phone" type="text">
+		</div>
+		<div id="insert-startquantity">
+		        <label for="startquantity">Startquantity: *</label>
+		        <input id="insert-input-startquantity" name="Startquantity" type="text">
+		</div>
+		<div id="insert-endquantity">
+		        <label for="endquantity">Endquantity: *</label>
+		        <input id="insert-input-endquantity" name="Endquantity" type="text">
+		</div>
+		<div id="insert-start">
+		        <label for="start">Start: *</label>
+		        <input id="insert-input-start" name="Start" type="text">
+		</div>
+		<div id="insert-end">
+		        <label for="end">End: *</label>
+		        <input id="insert-input-end" name="End" type="text">
+		</div>
+		<div id="insert-itemprice">
+		        <label for="itemprice">Item_price: *</label>
+		        <input id="insert-input-itemprice" name="Itemprice" type="text">
+		</div>
+		<div id="insert-taxprice">
+		        <label for="taxprice">Tax_price: *</label>
+		        <input id="insert-input-taxprice" name="Taxprice" type="text">
+		</div>
+		<div id="insert-tip">
+		        <label for="tip">Tip: *</label>
+		        <input id="insert-input-tip" name="Tip" type="text">
+		</div>
+		<div id="insert-totalprice">
+		        <label for="totalprice">Total_price: *</label>
+		        <input id="insert-input-totalprice" name="Totalprice" type="text">
+		</div>
+		<div id="insert-item">
+		        <label for="item">Item: *</label>
+		        <input id="insert-input-item" name="Item" type="text">
+		</div>
+		<div id="insert-type">
+		        <label for="type">Type: *</label>
+		        <input id="insert-input-type" name="Type" type="text">
+		</div>
+		<div id="insert-price">
+		        <label for="price">Price: *</label>
+		        <input id="insert-input-price" name="Price" type="text">
+		</div>
+		<div id="update-drinker">
+	        <label for="name">Replace Drinker: *</label>
+	        <input id="update-input-drinker" name="drinker" type="text">
+	    </div>
+		<div id="update-state">
+			<label for="state">Replace State: *</label>
+			<input id="update-input-state" name="state" type="text">
+		</div>
+		
+		<div id="update-manf">
+		        <label for="manf">Replace Manufacturer: *</label>
+		        <input id="update-input-manf" name="manf" type="text">
+		</div>
+		<div id="update-beer">
+		        <label for="beer">Replace Beer: *</label>
+		        <input id="update-input-beer" name="beer" type="text">
+		</div>
+		<div id="update-bar">
+		        <label for="bar">Replace Bar: *</label>
+		        <input id="update-input-bar" name="bar" type="text">
+		</div>
+		<div id="update-date">
+		        <label for="date">Replace Date: *</label>
+		        <input id="update-input-date" name="date" type="text">
+		</div>
+		<div id="update-itemid">
+		        <label for="itemid">Replace Item_id: *</label>
+		        <input id="update-input-itemid" name="itemid" type="text">
+		</div>
+		<div id="update-day">
+		        <label for="day">Replace Day: *</label>
+		        <input id="update-input-day" name="day" type="text">
+		</div>
+		<div id="update-phone">
+		        <label for="phone">Replace Phone: *</label>
+		        <input id="update-input-phone" name="phone" type="text">
+		</div>
+		<div id="update-startquantity">
+		        <label for="startquantity">Replace Startquantity: *</label>
+		        <input id="update-input-startquantity" name="Startquantity" type="text">
+		</div>
+		<div id="update-endquantity">
+		        <label for="endquantity">Replace Endquantity: *</label>
+		        <input id="update-input-endquantity" name="Endquantity" type="text">
+		</div>
+		<div id="update-start">
+		        <label for="start">Replace Start: *</label>
+		        <input id="update-input-start" name="Start" type="text">
+		</div>
+		<div id="update-end">
+		        <label for="end">Replace End: *</label>
+		        <input id="update-input-end" name="End" type="text">
+		</div>
+		<div id="update-itemprice">
+		        <label for="itemprice">Replace Item_price: *</label>
+		        <input id="update-input-itemprice" name="Itemprice" type="text">
+		</div>
+		<div id="update-taxprice">
+		        <label for="taxprice">Replace Tax_price: *</label>
+		        <input id="update-input-taxprice" name="Taxprice" type="text">
+		</div>
+		<div id="update-tip">
+		        <label for="tip">Replace Tip: *</label>
+		        <input id="update-input-tip" name="Tip" type="text">
+		</div>
+		<div id="update-totalprice">
+		        <label for="totalprice">Replace Total_price: *</label>
+		        <input id="update-input-totalprice" name="Totalprice" type="text">
+		</div>
+		<div id="update-item">
+		        <label for="item">Replace Item: *</label>
+		        <input id="update-input-item" name="Item" type="text">
+		</div>
+		<div id="update-type">
+		        <label for="type">Replace Type: *</label>
+		        <input id="update-input-type" name="Type" type="text">
+		</div>
+		<div id="update-price">
+		        <label for="price">Replace Price: *</label>
+		        <input id="update-input-price" name="Price" type="text">
+		</div>
 
+        <div id="insert-btn-group">
+			<button id="insert-drinker-btn"> Drinker</button>
+			<button id="insert-state-btn"> State</button>
+			<button id="insert-manf-btn"> Manufacturer</button>
+			<button id="insert-beer-btn"> Beer</button>
+			<button id="insert-bar-btn"> Bar</button>
+			<button id="insert-date-btn"> Date</button>
+			<button id="insert-itemid-btn"> Item_id</button>
+			<button id="insert-day-btn"> Day</button>
+			<button id="insert-phone-btn"> Phone</button>
+			<button id="insert-startquantity-btn"> Startquantity</button>
+			<button id="insert-endquantity-btn"> Endquantity</button>
+			<button id="insert-start-btn"> Start</button>
+			<button id="insert-end-btn"> End</button>
+			<button id="insert-itemprice-btn"> Item_price</button>
+			<button id="insert-taxprice-btn"> Tax_price</button>
+			<button id="insert-tip-btn"> Tip</button>
+			<button id="insert-totalprice-btn"> Total_price</button>
+			<button id="insert-item-btn"> Item</button>
+			<button id="insert-type-btn"> Type</button>
+			<button id="insert-price-btn"> Price</button>
+	     </div>
+	        
+	        
+	     <div id="insert-progress">
+	        <button id="insert-bttn">Insert</button>
+	        <button id="delete-btn">Delete</button>
+	        <button id="update-btn">Update</button>
+	        <button id="back-btn">Back</button>
+	        <p id="modify-result"></p>
+         </div>
+		</div>
       <ul id="item-list">
+      
         <li class="beer">
           <div>
             <a class="beer-name" href="#">beer</a>
@@ -88,7 +288,9 @@
               <i class="fa fa-star"></i>
             </div>
           </div>
+          <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
         </li>
+        
       </ul>
     </section>
   </div>
@@ -96,9 +298,13 @@
   <footer>
     <p class="title">BarBeerSystem</p>
     <p>"Get control of your bars."</p>
+    
   </footer>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.4.0/json2html.min.js"></script>
   <script src="https://rawgit.com/emn178/js-md5/master/build/md5.min.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  
+
 </body>
 </html>

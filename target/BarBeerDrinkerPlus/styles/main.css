@@ -237,7 +237,19 @@ ul {
 	width: 20px;
 }
 
-
+#insert-form {
+	background: #F2EBD9;
+	color: #624630;
+	list-style: none;
+	margin-left: 180px;
+	min-height: 400px;
+	padding: 10px;
+}
+#insert-form .notice {
+	font-size: 16px;
+	padding: 60px;
+	text-align: center;
+}
 
 
 /**

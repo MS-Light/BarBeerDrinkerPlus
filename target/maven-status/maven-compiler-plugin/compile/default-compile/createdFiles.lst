@@ -3,14 +3,15 @@ rpc/Register.class
 entity/Beer$1.class
 rpc/Login.class
 rpc/Logout.class
+entity/DrinkerSpending$1.class
 entity/Transactions$1.class
 db/MySQLDBUtil.class
 entity/Beer.class
+entity/BeerData$1.class
 rpc/GetBeer.class
 db/MySQLConnection.class
 entity/Transactions$TransactionsBuilder.class
 entity/Beer$BeerBuilder.class
-rpc/Calculate.class
 entity/Bartender$1.class
 entity/Bill.class
 entity/OneForAll.class

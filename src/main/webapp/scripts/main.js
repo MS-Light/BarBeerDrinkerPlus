@@ -28,6 +28,8 @@
 				loadBartender);
 		document.querySelector('#manufacturer-btn').addEventListener('click',
 				loadManufacturer);
+		document.querySelector('#insert-btn').addEventListener('click',
+				loadInsert);
 //		document.querySelector('#bar-beer-btn').addEventListener('click',
 //				searchBestSellBar);
 	}
@@ -81,20 +83,22 @@
 		hideElement(loginForm);
 		hideElement(registerForm);
 		
-		loadBeers();
+		loadDrinkers();
 	}
 
 	function loadBeers() {
+		hideElement(document.querySelector('#insert-form'));
 		console.log('loadBeers');
 		activeBtn('beer-btn');
 		var itemList = document.querySelector('#item-list');
-		itemList.innerHTML ='<div id="bar-form"><label for="beername"> Beer Name: </label><input id="beer_beer_input" name="beer" type="text"><button id="beer-beer-btn">Search Bar</button><button id="beer-beer-consumer">Search Consumers</button><button id="bar-beer-time">Time Distribution</button></div>';
+		itemList.innerHTML ='<div id="bar-form"><label for="beername"> Beer Name: </label><input id="beer_beer_input" name="beer" type="text"><button id="beer-beer-btn">Search Bar</button><button id="beer-beer-consumer">Search Consumers</button><button id="beer-beer-time">Time Distribution</button></div>';
 		document.querySelector('#beer-beer-btn').addEventListener('click',searchBestSellBar);
 		document.querySelector('#beer-beer-consumer').addEventListener('click',searchBiggestConsumers);
 		document.querySelector('#beer-beer-time').addEventListener('click',searchTimeDistributions);
 	}
 	
 	function loadDrinkers() {
+		hideElement(document.querySelector('#insert-form'));
 		console.log('loadDrinkers');
 		activeBtn('drinker-btn');
 		var itemList = document.querySelector('#item-list');
@@ -108,24 +112,31 @@
 //		}, false);
 //		itemList.appendChild(btn);
 		
-		itemList.innerHTML ='<div id="drinker-form"><label for="username">User Name: </label><input id="drinker_username" name="username" type="text"><button id="search-btn">Search</button></div>';
+		itemList.innerHTML ='<div id="drinker-form"><label for="username">User Name: </label><input id="drinker_username" name="username" type="text"><button id="search-btn">Search</button></div><button id="drinker-graph-btn">Graph Orders the most</button></div><button id="drinker-spend-btn">Drinker Spending per Day / Month</button></div>';
 		document.querySelector('#search-btn').addEventListener('click',searchDrinkers);
+		document.querySelector('#drinker-graph-btn').addEventListener('click',graphDrinkers);
+		document.querySelector('#drinker-spend-btn').addEventListener('click',graphDrinkerSpend);
 	}
 	
 	function loadBars() {
+		hideElement(document.querySelector('#insert-form'));
 		console.log('loadbars');
 		activeBtn('bar-btn');
 		var itemList = document.querySelector('#item-list');
-		itemList.innerHTML ='<div id="bar-form"><label for="barname"> Bar Name: </label><input id="bar_beer_input" name="beer" type="text"><button id="bar-largest-spender">Largest spenders</button><button id="bar-popular-beer">Most popular beer</button><button id="bar-manufacture">Most sells manufacturers</button></div>';
+		itemList.innerHTML ='<div id="bar-form"><label for="barname"> Bar Name: </label><input id="bar_beer_input" name="beer" type="text"><button id="bar-largest-spender">Largest spenders</button><button id="bar-popular-beer">Most popular beer</button><button id="bar-manufacture">Most sells manufacturers</button></div><button id="bar-busy-time">Most Busiest time</button></div><button id="bar-distribution-sales">Distribution Sales</button></div>';
 		document.querySelector('#bar-largest-spender').addEventListener('click',searchBar1);
 		document.querySelector('#bar-popular-beer').addEventListener('click',searchBar2);
 		document.querySelector('#bar-manufacture').addEventListener('click',searchBar3);
+		document.querySelector('#bar-busy-time').addEventListener('click',graphBarBusy);
+		document.querySelector('#bar-distribution-sales').addEventListener('click',graphDistributionSales);
+
 	}
 	function searchBar1(){searchBar('getlargestspender');}
 	function searchBar2(){searchBar('getpopularbeers');}
 	function searchBar3(){searchBar('getbestmanufacturers');}
 	
 	function loadBartender(){
+		hideElement(document.querySelector('#insert-form'));
 		console.log('loadbartender');
 		activeBtn('bartender-btn');
 		var itemList = document.querySelector('#item-list');
@@ -134,6 +145,7 @@
 		document.querySelector('#bartender-beer-sold').addEventListener('click',searchBartenderSold);
 	}
 	function loadManufacturer(){
+		hideElement(document.querySelector('#insert-form'));
 		console.log('loadmanufacturer');
 		activeBtn('manufacturer-btn');
 		var itemList = document.querySelector('#item-list');
@@ -242,10 +254,30 @@
 				});
 	}
 	function searchBiggestConsumers(){
-		
+		var beername = document.querySelector('#beer_beer_input').value;
+		var url = './getbiggestconsumer?beer='+beername
+		var data = null;
+		showLoadingMessage('Loading Consumers...');
+		ajax('GET', url, data,
+				function(res) {
+					var items = JSON.parse(res);
+					if (!items || items.length === 0) {
+						showWarningMessage('No such beer.');
+					} else {
+						showLoadingMessage('Loading Biggest Consumers...');
+						listItems(items);
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load beer.');
+				});
 	}
 	function searchTimeDistributions(){
-		
+		var beername = document.querySelector('#beer_beer_input').value;
+		var url = './getbeertimedistribution?beer='+beername;
+		var title = "Time Distribution of When "+beername+" Sells the Most";
+		graph(url,title,"Date","Quantity");
 	}
 	function searchDrinkers(){
 		// display loading message
@@ -724,6 +756,7 @@
 		hideElement(logoutBtn);
 		hideElement(welcomeMsg);
 		hideElement(registerForm);
+		hideElement(document.querySelector('#insert-form'));
 
 		clearLoginError();
 		showElement(loginForm);
@@ -829,6 +862,9 @@
 	function showRegisterResult(registerMessage) {
 		document.querySelector('#register-result').innerHTML = registerMessage;
 	}
+	function showModifyResult(modifyMessage) {
+		document.querySelector('#modify-result').innerHTML = modifyMessage;
+	}
 
 
 	function clearRegisterResult() {
@@ -871,6 +907,668 @@
 					"application/json;charset=utf-8");
 			xhr.send(data);
 		}
+	}
+	function graphDrinkers(){
+		let username =  document.querySelector('#drinker_username').value;
+		let url = "./getdrinkerordermost?username="+username;
+		let title = "Beers "+username+" orders the most";
+		graph(url,title,"Beer name","Count");
+	}
+	function graphDrinkerSpend(){
+		let username =  document.querySelector('#drinker_username').value;
+		let url = "./getdrinkerspendingday?username="+username;
+		let title = "Beers "+username+" Buy per Days";
+		graph(url,title,"Day","Spent");
+		url = "./getdrinkerspendingmonth?username="+username;
+		title = "Beers "+username+" Buy per Month";
+		graph(url,title,"Months","Spent");
+	}
+	
+	function graphBarBusy(){
+		let bar = document.querySelector('#bar_beer_input').value;
+		let url = "./getbusiestperiods?bar="+bar;
+		let title = "Busy time period of "+bar;
+		graph(url,title,"Time (Hour)","Sells in total");
+	}
+	
+	function graphDistributionSales(){
+		let bar = document.querySelector('#bar_beer_input').value;
+		let url = "./getdistributionsales?bar="+bar;
+		let title = "Distribution Sales period of "+bar;
+		graph(url,title,"Date","Sales");
+	}
+	
+	function graph(url,title,axisx,axisy){
+		var itemList = document.querySelector('#item-list');
+		var ct = $create('div',{
+			id: "chartContainer"+url,
+			style: "height: 370px; max-width: 920px; margin: 0px auto;"
+		});
+		itemList.appendChild(ct);
+		var dataPoints = [];
+
+		var chart = new CanvasJS.Chart("chartContainer"+url, {
+			animationEnabled: true,
+			theme: "light2",
+			title: {
+				text: title
+			},
+			axisX: {
+				title: axisx,
+				titleFontSize: 24,
+				includeZero: true
+			},
+			axisY: {
+				title: axisy,
+				titleFontSize: 24,
+				includeZero: true
+			},
+			data: [{
+				type: "column",
+				dataPoints: dataPoints
+			}]
+		});
+
+		function addData(data) {
+			for (var i = 0; i < data.length; i++) {
+				dataPoints.push({
+					label: data[i].name,
+					y: parseInt(data[i].manf)
+				});
+			}
+			chart.render();
+
+		}
+
+		$.getJSON(url, addData);
+	}
+	function graphDate(url,title,axisx,axisy){
+		var itemList = document.querySelector('#item-list');
+		var ct = $create('div',{
+			id: "chartContainer"+url,
+			style: "height: 370px; max-width: 920px; margin: 0px auto;"
+		});
+		itemList.appendChild(ct);
+		var dataPoints = [];
+
+		var chart = new CanvasJS.Chart("chartContainer"+url, {
+			animationEnabled: true,
+			theme: "light2",
+			title: {
+				text: title
+			},
+			axisX: {
+				title: axisx,
+				titleFontSize: 24,
+				includeZero: true
+			},
+			axisY: {
+				title: axisy,
+				titleFontSize: 24,
+				includeZero: true
+			},
+			data: [{
+				type: "column",
+				dataPoints: dataPoints
+			}]
+		});
+
+		function addData(data) {
+			for (var i = 0; i < data.length; i++) {
+				dataPoints.push({
+					label: Date.parse(data[i].name),
+					y: parseInt(data[i].manf)
+				});
+			}
+			chart.render();
+
+		}
+
+		$.getJSON(url, addData);
+	}
+		
+//		var chart = new CanvasJS.Chart("chartContainer", {
+//			theme:"light2",
+//			animationEnabled: true,
+//			title:{
+//				text: "Game of Thrones Viewers of the First Airing on HBO"
+//			},
+//			axisY :{
+//				includeZero: false,
+//				title: "Number of Viewers",
+//				suffix: "mn"
+//			},
+//			toolTip: {
+//				shared: "true"
+//			},
+//			legend:{
+//				cursor:"pointer",
+//				itemclick : toggleDataSeries
+//			},
+//			data: [{
+//				type: "spline",
+//				visible: false,
+//				showInLegend: true,
+//				yValueFormatString: "##.00mn",
+//				name: "Season 1",
+//				dataPoints: [
+//					{ label: "Ep. 1", y: 2.22 },
+//					{ label: "Ep. 2", y: 2.20 },
+//					{ label: "Ep. 3", y: 2.44 },
+//					{ label: "Ep. 4", y: 2.45 },
+//					{ label: "Ep. 5", y: 2.58 },
+//					{ label: "Ep. 6", y: 2.44 },
+//					{ label: "Ep. 7", y: 2.40 },
+//					{ label: "Ep. 8", y: 2.72 },
+//					{ label: "Ep. 9", y: 2.66 },
+//					{ label: "Ep. 10", y: 3.04 }
+//				]
+//			},
+//			{
+//				type: "spline", 
+//				showInLegend: true,
+//				visible: false,
+//				yValueFormatString: "##.00mn",
+//				name: "Season 2",
+//				dataPoints: [
+//					{ label: "Ep. 1", y: 3.86 },
+//					{ label: "Ep. 2", y: 3.76 },
+//					{ label: "Ep. 3", y: 3.77 },
+//					{ label: "Ep. 4", y: 3.65 },
+//					{ label: "Ep. 5", y: 3.90 },
+//					{ label: "Ep. 6", y: 3.88 },
+//					{ label: "Ep. 7", y: 3.69 },
+//					{ label: "Ep. 8", y: 3.86 },
+//					{ label: "Ep. 9", y: 3.38 },
+//					{ label: "Ep. 10", y: 4.20 }
+//				]
+//			},
+//			{
+//				type: "spline",
+//				visible: false,
+//				showInLegend: true,
+//				yValueFormatString: "##.00mn",
+//				name: "Season 3",
+//				dataPoints: [
+//					{ label: "Ep. 1", y: 4.37 },
+//					{ label: "Ep. 2", y: 4.27 },
+//					{ label: "Ep. 3", y: 4.72 },
+//					{ label: "Ep. 4", y: 4.87 },
+//					{ label: "Ep. 5", y: 5.35 },
+//					{ label: "Ep. 6", y: 5.50 },
+//					{ label: "Ep. 7", y: 4.84 },
+//					{ label: "Ep. 8", y: 4.13 },
+//					{ label: "Ep. 9", y: 5.22 },
+//					{ label: "Ep. 10", y: 5.39 }
+//				]
+//			},
+//			{
+//				type: "spline", 
+//				showInLegend: true,
+//				yValueFormatString: "##.00mn",
+//				name: "Season 4",
+//				dataPoints: [
+//					{ label: "Ep. 1", y: 6.64 },
+//					{ label: "Ep. 2", y: 6.31 },
+//					{ label: "Ep. 3", y: 6.59 },
+//					{ label: "Ep. 4", y: 6.95 },
+//					{ label: "Ep. 5", y: 7.16 },
+//					{ label: "Ep. 6", y: 6.40 },
+//					{ label: "Ep. 7", y: 7.20 },
+//					{ label: "Ep. 8", y: 7.17 },
+//					{ label: "Ep. 9", y: 6.95 },
+//					{ label: "Ep. 10", y: 7.09 }
+//				]
+//			},
+//			{
+//				type: "spline", 
+//				showInLegend: true,
+//				yValueFormatString: "##.00mn",
+//				name: "Season 5",
+//				dataPoints: [
+//					{ label: "Ep. 1", y: 8 },
+//					{ label: "Ep. 2", y: 6.81 },
+//					{ label: "Ep. 3", y: 6.71 },
+//					{ label: "Ep. 4", y: 6.82 },
+//					{ label: "Ep. 5", y: 6.56 },
+//					{ label: "Ep. 6", y: 6.24 },
+//					{ label: "Ep. 7", y: 5.40 },
+//					{ label: "Ep. 8", y: 7.01 },
+//					{ label: "Ep. 9", y: 7.14 },
+//					{ label: "Ep. 10", y: 8.11 }
+//				]
+//			},
+//			{
+//				type: "spline", 
+//				showInLegend: true,
+//				yValueFormatString: "##.00mn",
+//				name: "Season 6",
+//				dataPoints: [
+//					{ label: "Ep. 1", y: 7.94 },
+//					{ label: "Ep. 2", y: 7.29 },
+//					{ label: "Ep. 3", y: 7.28 },
+//					{ label: "Ep. 4", y: 7.82 },
+//					{ label: "Ep. 5", y: 7.89 },
+//					{ label: "Ep. 6", y: 6.71 },
+//					{ label: "Ep. 7", y: 7.80 },
+//					{ label: "Ep. 8", y: 7.60 },
+//					{ label: "Ep. 9", y: 7.66 },
+//					{ label: "Ep. 10", y: 8.89 }
+//				]
+//			},
+//			{
+//				type: "spline", 
+//				showInLegend: true,
+//				yValueFormatString: "##.00mn",
+//				name: "Season 7",
+//				dataPoints: [
+//					{ label: "Ep. 1", y: 10.11 },
+//					{ label: "Ep. 2", y: 9.27 },
+//					{ label: "Ep. 3", y: 9.25 },
+//					{ label: "Ep. 4", y: 10.17 },
+//					{ label: "Ep. 5", y: 10.72 },
+//					{ label: "Ep. 6", y: 10.24 },
+//					{ label: "Ep. 7", y: 12.07 }
+//				]
+//			}]
+//		});
+//		chart.render();
+//
+//		function toggleDataSeries(e) {
+//			if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible ){
+//				e.dataSeries.visible = false;
+//			} else {
+//				e.dataSeries.visible = true;
+//			}
+//			chart.render();
+//		}
+		
+		
+	function loadInsert(){
+		showElement(document.querySelector('#insert-form'));
+		activeBtn('insert-btn');
+		var itemList = document.querySelector('#item-list');
+		itemList.innerHTML ='';
+//		<div id="insert-drinker">
+//	        <label for="name">Drinker: *</label>
+//	        <input id="insert-input-drinker" name="drinker" type="text">
+//	    </div>
+//		<div id="insert-state">
+//			<label for="state">State: *</label>
+//			<input id="insert-input-state" name="state" type="text">
+//		</div>
+//		
+//		<div id="insert-manf">
+//		        <label for="manf">Manufacturer: *</label>
+//		        <input id="insert-input-manf" name="manf" type="text">
+//		</div>
+//		<div id="insert-beer">
+//		        <label for="beer">Beer: *</label>
+//		        <input id="insert-input-beer" name="beer" type="text">
+//		</div>
+//		<div id="insert-bar">
+//		        <label for="bar">Bar: *</label>
+//		        <input id="insert-input-bar" name="bar" type="text">
+//		</div>
+//		<div id="insert-date">
+//		        <label for="date">Date: *</label>
+//		        <input id="insert-input-date" name="date" type="text">
+//		</div>
+//		<div id="insert-itemid">
+//		        <label for="itemid">Item_id: *</label>
+//		        <input id="insert-input-itemid" name="itemid" type="text">
+//		</div>
+//		<div id="insert-day">
+//		        <label for="day">Day: *</label>
+//		        <input id="insert-input-day" name="day" type="text">
+//		</div>
+//		<div id="insert-phone">
+//		        <label for="phone">Phone: *</label>
+//		        <input id="insert-input-phone" name="phone" type="text">
+//		</div>
+//		<div id="insert-startquantity">
+//		        <label for="startquantity">Startquantity: *</label>
+//		        <input id="insert-input-startquantity" name="Startquantity" type="text">
+//		</div>
+//		<div id="insert-endquantity">
+//		        <label for="endquantity">Endquantity: *</label>
+//		        <input id="insert-input-endquantity" name="Endquantity" type="text">
+//		</div>
+//		<div id="insert-start">
+//		        <label for="start">Start: *</label>
+//		        <input id="insert-input-start" name="Start" type="text">
+//		</div>
+//		<div id="insert-end">
+//		        <label for="end">End: *</label>
+//		        <input id="insert-input-end" name="End" type="text">
+//		</div>
+//		<div id="insert-itemprice">
+//		        <label for="itemprice">Item_price: *</label>
+//		        <input id="insert-input-itemprice" name="Itemprice" type="text">
+//		</div>
+//		<div id="insert-taxprice">
+//		        <label for="taxprice">Tax_price: *</label>
+//		        <input id="insert-input-taxprice" name="Taxprice" type="text">
+//		</div>
+//		<div id="insert-tip">
+//		        <label for="tip">Tip: *</label>
+//		        <input id="insert-input-tip" name="Tip" type="text">
+//		</div>
+//		<div id="insert-totalprice">
+//		        <label for="totalprice">Total_price: *</label>
+//		        <input id="insert-input-totalprice" name="Totalprice" type="text">
+//		</div>
+//		<div id="insert-item">
+//		        <label for="item">Item: *</label>
+//		        <input id="insert-input-item" name="Item" type="text">
+//		</div>
+//		<div id="insert-type">
+//		        <label for="type">Type: *</label>
+//		        <input id="insert-input-type" name="Type" type="text">
+//		</div>
+//		<div id="insert-price">
+//		        <label for="price">Price: *</label>
+//		        <input id="insert-input-price" name="Price" type="text">
+//		</div>
+//		
+//		
+//		
+//		
+//		
+//		
+//		<div id="update-drinker">
+//	        <label for="name">Replace Drinker: *</label>
+//	        <input id="update-input-drinker" name="drinker" type="text">
+//	    </div>
+//		<div id="update-state">
+//			<label for="state">Replace State: *</label>
+//			<input id="update-input-state" name="state" type="text">
+//		</div>
+//		
+//		<div id="update-manf">
+//		        <label for="manf">Replace Manufacturer: *</label>
+//		        <input id="update-input-manf" name="manf" type="text">
+//		</div>
+//		<div id="update-beer">
+//		        <label for="beer">Replace Beer: *</label>
+//		        <input id="update-input-beer" name="beer" type="text">
+//		</div>
+//		<div id="update-bar">
+//		        <label for="bar">Replace Bar: *</label>
+//		        <input id="update-input-bar" name="bar" type="text">
+//		</div>
+//		<div id="update-date">
+//		        <label for="date">Replace Date: *</label>
+//		        <input id="update-input-date" name="date" type="text">
+//		</div>
+//		<div id="update-itemid">
+//		        <label for="itemid">Replace Item_id: *</label>
+//		        <input id="update-input-itemid" name="itemid" type="text">
+//		</div>
+//		<div id="update-day">
+//		        <label for="day">Replace Day: *</label>
+//		        <input id="update-input-day" name="day" type="text">
+//		</div>
+//		<div id="update-phone">
+//		        <label for="phone">Replace Phone: *</label>
+//		        <input id="update-input-phone" name="phone" type="text">
+//		</div>
+//		<div id="update-startquantity">
+//		        <label for="startquantity">Replace Startquantity: *</label>
+//		        <input id="update-input-startquantity" name="Startquantity" type="text">
+//		</div>
+//		<div id="update-endquantity">
+//		        <label for="endquantity">Replace Endquantity: *</label>
+//		        <input id="update-input-endquantity" name="Endquantity" type="text">
+//		</div>
+//		<div id="update-start">
+//		        <label for="start">Replace Start: *</label>
+//		        <input id="update-input-start" name="Start" type="text">
+//		</div>
+//		<div id="update-end">
+//		        <label for="end">Replace End: *</label>
+//		        <input id="update-input-end" name="End" type="text">
+//		</div>
+//		<div id="update-itemprice">
+//		        <label for="itemprice">Replace Item_price: *</label>
+//		        <input id="update-input-itemprice" name="Itemprice" type="text">
+//		</div>
+//		<div id="update-taxprice">
+//		        <label for="taxprice">Replace Tax_price: *</label>
+//		        <input id="update-input-taxprice" name="Taxprice" type="text">
+//		</div>
+//		<div id="update-tip">
+//		        <label for="tip">Replace Tip: *</label>
+//		        <input id="update-input-tip" name="Tip" type="text">
+//		</div>
+//		<div id="update-totalprice">
+//		        <label for="totalprice">Replace Total_price: *</label>
+//		        <input id="update-input-totalprice" name="Totalprice" type="text">
+//		</div>
+//		<div id="update-item">
+//		        <label for="item">Replace Item: *</label>
+//		        <input id="update-input-item" name="Item" type="text">
+//		</div>
+//		<div id="update-type">
+//		        <label for="type">Replace Type: *</label>
+//		        <input id="update-input-type" name="Type" type="text">
+//		</div>
+//		<div id="update-price">
+//		        <label for="price">Replace Price: *</label>
+//		        <input id="update-input-price" name="Price" type="text">
+//		</div>
+//		
+//		
+//		
+//		
+//		
+//        
+//        
+//        
+//        <div id="insert-btn-group">
+//			<button id="insert-drinker-btn">Insert Drinker</button>
+//			<button id="insert-state-btn">Insert State</button>
+//			<button id="insert-manf-btn">Insert Manufacturer</button>
+//			<button id="insert-beer-btn">Insert Beer</button>
+//			<button id="insert-bar-btn">Insert Bar</button>
+//			<button id="insert-date-btn">Insert Date</button>
+//			<button id="insert-itemid-btn">Insert Item_id</button>
+//			<button id="insert-day-btn">Insert Day</button>
+//			<button id="insert-phone-btn">Insert Phone</button>
+//			<button id="insert-startquantity-btn">Insert Startquantity</button>
+//			<button id="insert-endquantity-btn">Insert Endquantity</button>
+//			<button id="insert-start-btn">Insert Start</button>
+//			<button id="insert-end-btn">Insert End</button>
+//			<button id="insert-itemprice-btn">Insert Item_price</button>
+//			<button id="insert-taxprice-btn">Insert Tax_price</button>
+//			<button id="insert-tip-btn">Insert Tip</button>
+//			<button id="insert-totalprice-btn">Insert Total_price</button>
+//			<button id="insert-item-btn">Insert Item</button>
+//			<button id="insert-type-btn">Insert Type</button>
+//			<button id="insert-price-btn">Insert Price</button>
+//	     </div>
+//	        
+//	        
+//	     <div id="insert-progress">
+//	        <button id="insert-btn">Insert</button>
+//	        <button id="delete-btn">Delete</button>
+//	        <button id="update-btn">Update</button>
+//	        <p id="modify-result"></p>
+//         </div>;`
+		
+		
+		
+		
+		hideElement(document.querySelector('#insert-state'));
+        hideElement(document.querySelector('#insert-drinker'));
+        hideElement(document.querySelector('#insert-manf'));
+        hideElement(document.querySelector('#insert-beer'));
+        hideElement(document.querySelector('#insert-bar'));
+        hideElement(document.querySelector('#insert-date'));
+        hideElement(document.querySelector('#insert-itemid'));
+        hideElement(document.querySelector('#insert-day'));
+        hideElement(document.querySelector('#insert-phone'));
+        hideElement(document.querySelector('#insert-startquantity'));
+        hideElement(document.querySelector('#insert-endquantity'));
+        hideElement(document.querySelector('#insert-start'));
+        hideElement(document.querySelector('#insert-end'));
+        hideElement(document.querySelector('#insert-itemprice'));
+        hideElement(document.querySelector('#insert-taxprice'));
+        hideElement(document.querySelector('#insert-tip'));
+        hideElement(document.querySelector('#insert-totalprice'));
+        hideElement(document.querySelector('#insert-item'));
+        hideElement(document.querySelector('#insert-type'));
+        hideElement(document.querySelector('#insert-price'));
+		hideElement(document.querySelector('#insert-progress'));
+		
+		
+		
+		hideElement(document.querySelector('#update-state'));
+        hideElement(document.querySelector('#update-drinker'));
+        hideElement(document.querySelector('#update-manf'));
+        hideElement(document.querySelector('#update-beer'));
+        hideElement(document.querySelector('#update-bar'));
+        hideElement(document.querySelector('#update-date'));
+        hideElement(document.querySelector('#update-itemid'));
+        hideElement(document.querySelector('#update-day'));
+        hideElement(document.querySelector('#update-phone'));
+        hideElement(document.querySelector('#update-startquantity'));
+        hideElement(document.querySelector('#update-endquantity'));
+        hideElement(document.querySelector('#update-start'));
+        hideElement(document.querySelector('#update-end'));
+        hideElement(document.querySelector('#update-itemprice'));
+        hideElement(document.querySelector('#update-taxprice'));
+        hideElement(document.querySelector('#update-tip'));
+        hideElement(document.querySelector('#update-totalprice'));
+        hideElement(document.querySelector('#update-item'));
+        hideElement(document.querySelector('#update-type'));
+        hideElement(document.querySelector('#update-price'));
+        showElement(document.querySelector('#insert-btn-group'));
+		
+		document.querySelector('#insert-drinker-btn').addEventListener('click',insertDrinker);
+		document.querySelector('#insert-bar-btn').addEventListener('click',insertBar);
+//		document.querySelector('#insert-drinker-btn').addEventListener('click',function (){DrinkerHelper('PUT')});
+	}
+	
+	function insertDrinker(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-drinker'));
+		showElement(document.querySelector('#insert-phone'));
+		showElement(document.querySelector('#insert-state'));
+		showElement(document.querySelector('#update-drinker'));
+		showElement(document.querySelector('#update-phone'));
+		showElement(document.querySelector('#update-state'));
+		showElement(document.querySelector('#insert-progress'));
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){DrinkerHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){DrinkerHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){DrinkerHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function insertBar(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-bar'));
+		showElement(document.querySelector('#insert-state'));
+		showElement(document.querySelector('#update-bar'));
+		showElement(document.querySelector('#update-state'));
+		showElement(document.querySelector('#insert-progress'));
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){BarHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){BarHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){BarHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	
+	function DrinkerHelper(method){
+		let drinker = document.querySelector('#insert-input-drinker').value;
+		let phone = document.querySelector('#insert-input-phone').value;
+		let state = document.querySelector('#insert-input-state').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Drinker (name,phone,state) VALUES("'+drinker+'","'+phone+'","'+state+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPdrinker = document.querySelector('#update-input-drinker').value;
+			let RPphone = document.querySelector('#update-input-phone').value;
+			let RPstate = document.querySelector('#update-input-state').value;
+			sql = 'Drinker SET name = "'+drinker+'",phone = "'+phone+'",state = "'+state+'" WHERE name = "'+RPdrinker+'" and phone = "'+RPphone+'" and state = "'+RPstate+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Drinker WHERE name = "'+drinker+'" and phone = "'+phone+'" and state = "'+state+'";';
+			goModify(method, sql);
+		}	
+	}
+	function BarHelper(method){
+		let bar = document.querySelector('#insert-input-bar').value;
+		let state = document.querySelector('#insert-input-state').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Bar (name,state) VALUES("'+bar+'","'+state+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPbar = document.querySelector('#update-input-bar').value;
+			let RPstate = document.querySelector('#update-input-state').value;
+			sql = 'Bar SET name = "'+bar+'",state = "'+state+'" WHERE name = "'+RPbar+'" and state = "'+RPstate+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Bar WHERE name = "'+bar+'" and state = "'+state+'";';
+			goModify(method, sql);
+		}	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	function goInsert(sql){
+		showModifyResult('Sent Insert Request');
+		var url = './insert';
+		var req = JSON.stringify({
+			query: sql
+		});
+
+		ajax("POST", url, req,
+		// successful callback
+		function(res) {
+			var result = JSON.parse(res);
+			// successfully logged in
+			if (result.result === 'SUCCESS') {
+				showModifyResult('Succesfully Modifyed');
+			} else {
+				showModifyResult('Some Error Existed');
+			}
+		},
+		// error
+		function() {
+			showModifyResult('Failed to Modify');
+		}, true);
+	}
+	function goModify(method,sql){
+		showModifyResult('Sent Modify Request');
+		var url = './modify';
+		var req = JSON.stringify({
+			query: sql
+		});
+
+		ajax(method, url, req,
+		// successful callback
+		function(res) {
+			var result = JSON.parse(res);
+			// successfully logged in
+			if (result.result === 'SUCCESS') {
+				showModifyResult('Succesfully Modifyed');
+			} else {
+				showModifyResult('Some Error Existed');
+			}
+		},
+		// error
+		function() {
+			showModifyResult('Failed to Modify');
+		}, true);
 	}
 
 	init();
