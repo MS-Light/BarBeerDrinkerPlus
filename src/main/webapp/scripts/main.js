@@ -122,14 +122,98 @@
 		hideElement(document.querySelector('#insert-form'));
 		console.log('loadbars');
 		activeBtn('bar-btn');
+		
 		var itemList = document.querySelector('#item-list');
-		itemList.innerHTML ='<div id="bar-form"><label for="barname"> Bar Name: </label><input id="bar_beer_input" name="beer" type="text"><button id="bar-largest-spender">Largest spenders</button><button id="bar-popular-beer">Most popular beer</button><button id="bar-manufacture">Most sells manufacturers</button></div><button id="bar-busy-time">Most Busiest time</button></div><button id="bar-distribution-sales">Distribution Sales</button></div>';
+		itemList.innerHTML =`<div id="bar-form"><label for="barname"> Bar Name: </label>
+		<input id="bar_beer_input" name="beer" type="text">
+		<button id="bar-largest-spender">Largest spenders</button><button id="bar-popular-beer">Most popular beer</button><button id="bar-manufacture">Most sells manufacturers</button></div><button id="bar-busy-time">Most Busiest time</button></div><button id="bar-distribution-sales">Distribution Sales</button>
+							<br><br>
+							<label for="Beer">Choose a Beer:</label>
+							<select id="beer-select" name="beer">
+								
+							</select>
+							<label for="day">Choose a day:</label>
+							<select id="day-select" name="day">
+							  
+							</select>
+							<br><br>
+		<button id="bar-analytics">Bar Analytics</button>
+							
+							  
+							</div>`;
 		document.querySelector('#bar-largest-spender').addEventListener('click',searchBar1);
 		document.querySelector('#bar-popular-beer').addEventListener('click',searchBar2);
 		document.querySelector('#bar-manufacture').addEventListener('click',searchBar3);
 		document.querySelector('#bar-busy-time').addEventListener('click',graphBarBusy);
 		document.querySelector('#bar-distribution-sales').addEventListener('click',graphDistributionSales);
-
+		document.querySelector('#bar-analytics').addEventListener('click',barAnalytics);
+		
+		
+		var url = "./getbeer";
+		var data = null;
+		ajax('GET', url, data,
+				function(res) {
+					var items1 = JSON.parse(res);
+					if (!items1 || items1.length === 0) {
+						showWarningMessage('No Beer.');
+					}else{
+						addBeerInList(items1,"beer-select");
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load Drinker.');
+				});
+		var url2 = "./getinfo?query=SELECT * FROM BarBeerDrinkerPlus.Day Order by name;&info=name";
+		ajax('GET', url2, data,
+				function(res) {
+					var items2 = JSON.parse(res);
+					if (!items2 || items2.length === 0) {
+						showWarningMessage('No Day.');
+					}else{
+						addDayInList(items2,"day-select");
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load Drinker.');
+				});
+	}
+	
+	function addBeerInList(items1,name){
+		var select = document.querySelector('#'+name+'');
+	    for(var a=0;a<items1.length;a++) {
+	    	var option = $create('option', {
+				text : items1[a].name,
+				value : items1[a].name
+			});
+	        select.appendChild(option);
+	    }
+	}
+	function addBarInList(items1,name){
+		var select = document.querySelector('#'+name+'');
+	    for(var a=0;a<items1.length;a++) {
+	    	var option = $create('option', {
+				text : items1[a].info,
+				value : items1[a].info
+			});
+	        select.appendChild(option);
+	    }
+	}
+	function addDayInList(items2,name){
+		var select = document.querySelector('#'+name+'');
+		var temp = $create('option', {
+			text : "EveryDay",
+			value : "EveryDay"
+		});
+        select.appendChild(temp);
+	    for(var a=0;a<items2.length;a++) {
+	    	var option = $create('option', {
+				text : items2[a].info,
+				value : items2[a].info
+			});
+	        select.appendChild(option);
+	    }
 	}
 	function searchBar1(){searchBar('getlargestspender');}
 	function searchBar2(){searchBar('getpopularbeers');}
@@ -140,9 +224,136 @@
 		console.log('loadbartender');
 		activeBtn('bartender-btn');
 		var itemList = document.querySelector('#item-list');
-		itemList.innerHTML ='<div id="bartender-form"><label for="bartendername"> Bartender Name: </label><input id="bartender_name_input" name="bartender" type="text"><label for="barname"> Bar Name: </label><input id="bartender_bar_input" name="bar" type="text"><button id="bartender-shift-btn">Bartender Shifts</button><button id="bartender-beer-sold">Most Sold beers</button>';
+		itemList.innerHTML =`<div id="bartender-form"><label for="bartendername"> Bartender Name: </label><input id="bartender_name_input" name="bartender" type="text"><label for="barname"> Bar Name: </label><input id="bartender_bar_input" name="bar" type="text"><button id="bartender-shift-btn">Bartender Shifts</button><button id="bartender-beer-sold">Most Sold beers</button>
+		<br><br>
+							<label for="bartender-select-bar">Select a bar: </label>
+							<select id="bartender-bar-select" name="bar">
+								
+							</select>
+							<label for="bartender-select-day">Choose a day: </label>
+							<select id="bartender-day-select" name="day">
+							  
+							</select>
+							<label for="bartender-select-start">Start time: </label>
+							<select id="bartender-start-select" name="start">
+								<option value="08:00">08:00</option>
+	<option value="08:30">08:30</option>
+	<option value="09:00">09:00</option>
+	<option value="09:30">09:30</option>
+	<option value="10:00">10:00</option>
+	<option value="10:30">10:30</option>
+	<option value="11:00">11:00</option>
+	<option value="11:30">11:30</option>
+	<option value="12:00">12:00</option>
+	<option value="12:30">12:30</option>
+	<option value="13:00">13:00</option>
+	<option value="13:30">13:30</option>
+	<option value="14:00">14:00</option>
+	<option value="14:30">14:30</option>
+	<option value="15:00">15:00</option>
+	<option value="15:30">15:30</option>
+	<option value="16:00">16:00</option>
+	<option value="16:30">16:30</option>
+	<option value="17:00">17:00</option>
+	<option value="17:30">17:30</option>
+	<option value="18:00">18:00</option>
+	<option value="18:30">18:30</option>
+	<option value="19:00">19:00</option>
+	<option value="19:30">19:30</option>
+	<option value="20:00">20:00</option>
+	<option value="20:30">20:30</option>
+	<option value="21:00">21:00</option>
+	<option value="21:30">21:30</option>
+	<option value="22:00">22:00</option>
+	<option value="22:30">22:30</option>
+	<option value="23:00">23:00</option>
+	<option value="23:30">23:30</option>
+							</select>
+							<label for="bartender-select-end">End time: </label>
+							<select id="bartender-end-select" name="end">
+							  <option value="08:00">08:00</option>
+	<option value="08:30">08:30</option>
+	<option value="09:00">09:00</option>
+	<option value="09:30">09:30</option>
+	<option value="10:00">10:00</option>
+	<option value="10:30">10:30</option>
+	<option value="11:00">11:00</option>
+	<option value="11:30">11:30</option>
+	<option value="12:00">12:00</option>
+	<option value="12:30">12:30</option>
+	<option value="13:00">13:00</option>
+	<option value="13:30">13:30</option>
+	<option value="14:00">14:00</option>
+	<option value="14:30">14:30</option>
+	<option value="15:00">15:00</option>
+	<option value="15:30">15:30</option>
+	<option value="16:00">16:00</option>
+	<option value="16:30">16:30</option>
+	<option value="17:00">17:00</option>
+	<option value="17:30">17:30</option>
+	<option value="18:00">18:00</option>
+	<option value="18:30">18:30</option>
+	<option value="19:00">19:00</option>
+	<option value="19:30">19:30</option>
+	<option value="20:00">20:00</option>
+	<option value="20:30">20:30</option>
+	<option value="21:00">21:00</option>
+	<option value="21:30">21:30</option>
+	<option value="22:00">22:00</option>
+	<option value="22:30">22:30</option>
+	<option value="23:00">23:00</option>
+	<option value="23:30">23:30</option>
+	<option value="24:00">24:00</option>
+	<option value="24:30">24:30</option>	
+							</select>
+							<br><br>
+		<button id="bartender-analytics">Bartender Analytics</button>
+		
+		
+		
+		`;
 		document.querySelector('#bartender-shift-btn').addEventListener('click',searchBartenderShift);
 		document.querySelector('#bartender-beer-sold').addEventListener('click',searchBartenderSold);
+		var url = "./getinfo?query=SELECT * From BarBeerDrinkerPlus.Bar Order by name;&info=name";
+		var data = null;
+		ajax('GET', url, data,
+				function(res) {
+					var items1 = JSON.parse(res);
+					if (!items1 || items1.length === 0) {
+						showWarningMessage('No bar.');
+					}else{
+						addBarInList(items1,"bartender-bar-select");
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load bar.');
+				});
+		var url2 = "./getinfo?query=SELECT * FROM BarBeerDrinkerPlus.Day Order by name;&info=name";
+		ajax('GET', url2, data,
+				function(res) {
+					var items2 = JSON.parse(res);
+					if (!items2 || items2.length === 0) {
+						showWarningMessage('No Day.');
+					}else{
+						addDayInList(items2,"bartender-day-select");
+					}
+				},
+				// failed callback
+				function() {
+					showErrorMessage('Cannot load Drinker.');
+				});
+		document.querySelector('#bartender-analytics').addEventListener('click',bartenderAnalytics);
+	}
+	
+	function bartenderAnalytics(){
+		var bar = document.querySelector('#bartender-bar-select').value;
+		var day = document.querySelector('#bartender-day-select').value;
+		var start = document.querySelector('#bartender-start-select').value;
+		var end = document.querySelector('#bartender-end-select').value;
+		let url = "./getbartenderanalytics?bar="+bar+"&day="+day+"&start="+start+"&end="+end;
+		let title = "Bartender Analytics of "+bar+" on "+day+" from "+start+" to "+end;
+		graph(url,title,"Bartender","Sells in total");
 	}
 	function loadManufacturer(){
 		hideElement(document.querySelector('#insert-form'));
@@ -982,50 +1193,6 @@
 
 		$.getJSON(url, addData);
 	}
-	function graphDate(url,title,axisx,axisy){
-		var itemList = document.querySelector('#item-list');
-		var ct = $create('div',{
-			id: "chartContainer"+url,
-			style: "height: 370px; max-width: 920px; margin: 0px auto;"
-		});
-		itemList.appendChild(ct);
-		var dataPoints = [];
-
-		var chart = new CanvasJS.Chart("chartContainer"+url, {
-			animationEnabled: true,
-			theme: "light2",
-			title: {
-				text: title
-			},
-			axisX: {
-				title: axisx,
-				titleFontSize: 24,
-				includeZero: true
-			},
-			axisY: {
-				title: axisy,
-				titleFontSize: 24,
-				includeZero: true
-			},
-			data: [{
-				type: "column",
-				dataPoints: dataPoints
-			}]
-		});
-
-		function addData(data) {
-			for (var i = 0; i < data.length; i++) {
-				dataPoints.push({
-					label: Date.parse(data[i].name),
-					y: parseInt(data[i].manf)
-				});
-			}
-			chart.render();
-
-		}
-
-		$.getJSON(url, addData);
-	}
 		
 //		var chart = new CanvasJS.Chart("chartContainer", {
 //			theme:"light2",
@@ -1419,6 +1586,9 @@
         hideElement(document.querySelector('#insert-item'));
         hideElement(document.querySelector('#insert-type'));
         hideElement(document.querySelector('#insert-price'));
+        hideElement(document.querySelector('#insert-time'));
+        hideElement(document.querySelector('#insert-bartender'));
+        hideElement(document.querySelector('#insert-quantity'));
 		hideElement(document.querySelector('#insert-progress'));
 		
 		
@@ -1443,10 +1613,23 @@
         hideElement(document.querySelector('#update-item'));
         hideElement(document.querySelector('#update-type'));
         hideElement(document.querySelector('#update-price'));
+        hideElement(document.querySelector('#update-time'));
+        hideElement(document.querySelector('#update-bartender'));
+        hideElement(document.querySelector('#update-quantity'));
         showElement(document.querySelector('#insert-btn-group'));
 		
 		document.querySelector('#insert-drinker-btn').addEventListener('click',insertDrinker);
 		document.querySelector('#insert-bar-btn').addEventListener('click',insertBar);
+		document.querySelector('#insert-beer-btn').addEventListener('click',insertBeer);
+		document.querySelector('#insert-freq-btn').addEventListener('click',insertFrequents);
+		document.querySelector('#insert-bills-btn').addEventListener('click',insertBills);
+		document.querySelector('#insert-inventory-btn').addEventListener('click',insertInventory);
+		document.querySelector('#insert-day-btn').addEventListener('click',insertDay);
+		document.querySelector('#insert-likes-btn').addEventListener('click',insertLikes);
+		document.querySelector('#insert-drinker-btn').addEventListener('click',insertDrinker);
+		document.querySelector('#insert-operates-btn').addEventListener('click',insertOperates);
+		document.querySelector('#insert-shifts-btn').addEventListener('click',insertShifts);
+		document.querySelector('#insert-transactions-btn').addEventListener('click',insertTransactions);
 //		document.querySelector('#insert-drinker-btn').addEventListener('click',function (){DrinkerHelper('PUT')});
 	}
 	
@@ -1515,6 +1698,452 @@
 			goModify(method, sql);
 		}	
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	//Beer (name,manf)
+	function insertBeer(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-beer'));
+		showElement(document.querySelector('#insert-manf'));
+		showElement(document.querySelector('#update-beer'));
+		showElement(document.querySelector('#update-manf'));
+		showElement(document.querySelector('#insert-progress'));
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){BeerHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){BeerHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){BeerHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function BeerHelper(method){
+		let beer = document.querySelector('#insert-input-beer').value;
+		let manf = document.querySelector('#insert-input-manf').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Beer (name,manf) VALUES("'+beer+'","'+manf+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPbeer = document.querySelector('#update-input-beer').value;
+			let RPmanf = document.querySelector('#update-input-manf').value;
+			sql = 'Beer SET name = "'+beer+'",manf = "'+manf+'" WHERE name = "'+RPbeer+'" and state = "'+RPmanf+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Beer WHERE name = "'+beer+'" and manf = "'+manf+'";';
+			goModify(method, sql);
+		}	
+	}
+
+
+
+
+	//Bills (bill_id,bar,date,drinker,item_price,tax_price,tip,total_price,time,bartender,day)
+	
+	function insertBills(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-itemid'));
+		showElement(document.querySelector('#insert-bar'));
+		showElement(document.querySelector('#insert-date'));
+		showElement(document.querySelector('#insert-drinker'));
+		showElement(document.querySelector('#insert-itemprice'));
+		showElement(document.querySelector('#insert-taxprice'));
+		showElement(document.querySelector('#insert-tip'));
+		showElement(document.querySelector('#insert-totalprice'));
+		showElement(document.querySelector('#insert-time'));
+		showElement(document.querySelector('#insert-bartender'));
+		showElement(document.querySelector('#insert-day'));
+
+
+		showElement(document.querySelector('#update-itemid'));
+		showElement(document.querySelector('#update-bar'));
+		showElement(document.querySelector('#update-date'));
+		showElement(document.querySelector('#update-drinker'));
+		showElement(document.querySelector('#update-itemprice'));
+		showElement(document.querySelector('#update-taxprice'));
+		showElement(document.querySelector('#update-tip'));
+		showElement(document.querySelector('#update-totalprice'));
+		showElement(document.querySelector('#update-time'));
+		showElement(document.querySelector('#update-bartender'));
+		showElement(document.querySelector('#update-day'));
+		
+		showElement(document.querySelector('#insert-progress'));
+
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){BillsHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){BillsHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){BillsHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function BillsHelper(method){
+		let itemid = document.querySelector('#insert-input-itemid').value;
+		let bar = document.querySelector('#insert-input-bar').value;
+		let date = document.querySelector('#insert-input-date').value;
+		let drinker = document.querySelector('#insert-input-drinker').value;
+		let itemprice = document.querySelector('#insert-input-itemprice').value;
+		let taxprice = document.querySelector('#insert-input-taxprice').value;
+		let tip = document.querySelector('#insert-input-tip').value;
+		let totalprice = document.querySelector('#insert-input-totalprice').value;
+		let time = document.querySelector('#insert-input-time').value;
+		let bartender = document.querySelector('#insert-input-bartender').value;
+		let day = document.querySelector('#insert-input-day').value;
+
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Bills (bill_id,bar,date,drinker,item_price,tax_price,tip,total_price,time,bartender,day)VALUES("'+itemid+'","'+bar+'","'+date+'","'+drinker+'","'+itemprice+'","'+taxprice+'","'+tip+'","'+totalprice+'","'+time+'","'+bartender+'","'+day+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPbill_id = document.querySelector('#update-input-itemid').value;
+			let RPbar = document.querySelector('#update-input-bar').value;
+			let RPdate = document.querySelector('#update-input-date').value;
+			let RPdrinker = document.querySelector('#update-input-drinker').value;
+			let RPitem_price = document.querySelector('#update-input-itemprice').value;
+			let RPtax_price = document.querySelector('#update-input-taxprice').value;
+			let RPtip = document.querySelector('#update-input-tip').value;
+			let RPtotal_price = document.querySelector('#update-input-totalprice').value;
+			let RPtime = document.querySelector('#update-input-time').value;
+			let RPbartender = document.querySelector('#update-input-bartender').value;
+			let RPday = document.querySelector('#update-input-day').value;
+
+			sql = 'Bills SET bill_id = "'+itemid+'",bar = "'+bar+'",date = "'+date+'",drinker = "'+drinker+'",item_price = "'+itemprice+'",tax_price = "'+taxprice+'",tip = "'+tip+'",total_price = "'+totalprice+'",time = "'+time+'",bartender = "'+bartender+'",day = "'+day+'" WHERE bill_id = "'+RPbill_id+'" and bar = "'+RPbar+'" and date = "'+RPdate+'" and drinker = "'+RPdrinker+'" and item_price = "'+RPitem_price+'" and tax_price = "'+RPtax_price+'" and tip = "'+RPtip+'" and total_price = "'+RPtotal_price+'" and time = "'+RPtime+'" and bartender = "'+RPbartender+'" and day = "'+RPday+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Bills WHERE bill_id = "'+itemid+'" and bar = "'+bar+'" and date = "'+date+'" and drinker = "'+drinker+'" and item_price = "'+itemprice+'" and tax_price = "'+taxprice+'" and tip = "'+tip+'" and total_price = "'+totalprice+'" and time = "'+time+'" and bartender = "'+bartender+'" and day = "'+day+'";';
+			goModify(method, sql);
+		}	
+	}
+
+
+
+
+	//Day table (name)
+	function insertDay(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-day'));
+		showElement(document.querySelector('#update-day'));
+		showElement(document.querySelector('#insert-progress'));
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){DayHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){DayHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){DayHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function DayHelper(method){
+		let day = document.querySelector('#insert-input-day').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Day (name) VALUES("'+day+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPday = document.querySelector('#update-input-day').value;
+			sql = 'Day SET name = "'+day+'" WHERE name = "'+RPday+'" ;';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Day WHERE name = "'+day+'" ;';
+			goModify(method, sql);
+		}	
+	}
+
+
+
+
+	//Frequents table  (drinker,bar)
+	function insertFrequents(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-drinker'));
+		showElement(document.querySelector('#insert-bar'));
+		showElement(document.querySelector('#update-drinker'));
+		showElement(document.querySelector('#update-bar'));
+		showElement(document.querySelector('#insert-progress'));
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){FrequentsHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){FrequentsHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){FrequentsHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function FrequentsHelper(method){
+		let drinker = document.querySelector('#insert-input-drinker').value;
+		let bar = document.querySelector('#insert-input-bar').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Frequents (drinker,bar) VALUES("'+drinker+'","'+bar+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPdrinker = document.querySelector('#update-input-drinker').value;
+			let RPbar = document.querySelector('#update-input-bar').value;
+			sql = 'Frequents SET drinker = "'+drinker+'",bar = "'+bar+'" WHERE drinker = "'+RPdrinker+'" and bar = "'+RPbar+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Frequents WHERE drinker = "'+drinker+'" and bar = "'+bar+'";';
+			goModify(method, sql);
+		}	
+	}
+
+
+
+
+
+	//Inventory (bar,beer,date,startquantity,endquantity)
+	function insertInventory(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-bar'));
+		showElement(document.querySelector('#insert-beer'));
+		showElement(document.querySelector('#insert-date'));
+		showElement(document.querySelector('#insert-startquantity'));
+		showElement(document.querySelector('#insert-endquantity'));
+
+
+		showElement(document.querySelector('#update-bar'));
+		showElement(document.querySelector('#update-beer'));
+		showElement(document.querySelector('#update-date'));
+		showElement(document.querySelector('#update-startquantity'));
+		showElement(document.querySelector('#update-endquantity'));
+		
+		showElement(document.querySelector('#insert-progress'));
+
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){InventoryHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){InventoryHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){InventoryHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function InventoryHelper(method){
+		let bar = document.querySelector('#insert-input-bar').value;
+		let beer = document.querySelector('#insert-input-beer').value;
+		let date = document.querySelector('#insert-input-date').value;
+		let startquantity = document.querySelector('#insert-input-startquantity').value;
+		let endquantity = document.querySelector('#insert-input-endquantity').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Inventory (bar,beer,date,startquantity,endquantity) VALUES("'+bar+'","'+beer+'","'+date+'","'+startquantity+'","'+endquantity+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPbar = document.querySelector('#update-input-bar').value;
+			let RPbeer = document.querySelector('#update-input-beer').value;
+			let RPdate = document.querySelector('#update-input-date').value;
+			let RPstartquantity = document.querySelector('#update-input-startquantity').value;
+			let RPendquantity = document.querySelector('#update-input-endquantity').value;
+
+			sql = 'Inventory SET bar = "'+bar+'",beer = "'+beer+'",date = "'+date+'",startquantity = "'+startquantity+'",endquantity = "'+endquantity+'" WHERE bar = "'+RPbar+'" and beer = "'+RPbeer+'" and date = "'+RPdate+'" and startquantity = "'+RPstartquantity+'" and endquantity = "'+RPendquantity+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Inventory WHERE bar = "'+bar+'" and beer = "'+beer+'" and date = "'+date+'" and startquantity = "'+startquantity+'" and endquantity = "'+endquantity+'";';
+			goModify(method, sql);
+		}	
+	}
+
+
+
+
+	//Likes table  (drinker,beer)
+	function insertLikes(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-drinker'));
+		showElement(document.querySelector('#insert-beer'));
+		showElement(document.querySelector('#update-drinker'));
+		showElement(document.querySelector('#update-beer'));
+		showElement(document.querySelector('#insert-progress'));
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){LikesHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){LikesHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){LikesHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function LikesHelper(method){
+		let drinker = document.querySelector('#insert-input-drinker').value;
+		let beer = document.querySelector('#insert-input-beer').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Likes (drinker,beer) VALUES("'+drinker+'","'+beer+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPdrinker = document.querySelector('#update-input-drinker').value;
+			let RPbeer = document.querySelector('#update-input-beer').value;
+			sql = 'Likes SET drinker = "'+drinker+'",beer = "'+beer+'" WHERE drinker = "'+RPdrinker+'" and beer = "'+RPbeer+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Likes WHERE drinker = "'+drinker+'" and beer = "'+beer+'";';
+			goModify(method, sql);
+		}	
+	}
+
+
+	//Operates table  (bar,day,start,end)
+	function insertOperates(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-bar'));
+		showElement(document.querySelector('#insert-day'));
+		showElement(document.querySelector('#insert-start'));
+		showElement(document.querySelector('#insert-end'));
+
+
+		showElement(document.querySelector('#update-bar'));
+		showElement(document.querySelector('#update-day'));
+		showElement(document.querySelector('#update-start'));
+		showElement(document.querySelector('#update-end'));
+		
+		showElement(document.querySelector('#insert-progress'));
+
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){OperatesHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){OperatesHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){OperatesHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function OperatesHelper(method){
+		let bar = document.querySelector('#insert-input-bar').value;
+		let day = document.querySelector('#insert-input-day').value;
+		let start = document.querySelector('#insert-input-start').value;
+		let end = document.querySelector('#insert-input-end').value;
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Operates (bar,day,start,end) VALUES("'+bar+'","'+day+'","'+start+'","'+end+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPbar = document.querySelector('#update-input-bar').value;
+			let RPday = document.querySelector('#update-input-day').value;
+			let RPstart = document.querySelector('#update-input-start').value;
+			let RPend = document.querySelector('#update-input-end').value;
+
+			sql = 'Operates SET bar = "'+bar+'",day = "'+day+'",start = "'+start+'",end = "'+end+'" WHERE bar = "'+RPbar+'" and day = "'+RPday+'" and start = "'+RPstart+'" and end = "'+RPend+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Operates WHERE bar = "'+bar+'" and day = "'+day+'" and start = "'+start+'" and end = "'+end+'";';
+			goModify(method, sql);
+		}	
+	}
+
+
+
+	//Shifts (bar,bartender,day,start,end,date)
+	function insertShifts(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-bar'));
+		showElement(document.querySelector('#insert-bartender'));
+		showElement(document.querySelector('#insert-day'));
+		showElement(document.querySelector('#insert-start'));
+		showElement(document.querySelector('#insert-end'));
+		showElement(document.querySelector('#insert-date'));
+
+		showElement(document.querySelector('#update-bar'));
+		showElement(document.querySelector('#update-bartender'));
+		showElement(document.querySelector('#update-day'));
+		showElement(document.querySelector('#update-start'));
+		showElement(document.querySelector('#update-end'));
+		showElement(document.querySelector('#update-date'));
+		
+		showElement(document.querySelector('#insert-progress'));
+
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){ShiftsHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){ShiftsHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){ShiftsHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function ShiftsHelper(method){
+		let bar = document.querySelector('#insert-input-bar').value;
+		let bartender = document.querySelector('#insert-input-bartender').value;
+		let day = document.querySelector('#insert-input-day').value;
+		let start = document.querySelector('#insert-input-start').value;
+		let end = document.querySelector('#insert-input-end').value;
+		let date = document.querySelector('#insert-input-date').value;
+
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Shifts (bar,bartender,day,start,end,date) VALUES("'+bar+'","'+bartender+'","'+day+'","'+start+'","'+end+'","'+date+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPbar = document.querySelector('#update-input-bar').value;
+			let RPbartender = document.querySelector('#update-input-bartender').value;
+			let RPday = document.querySelector('#update-input-day').value;
+			let RPstart = document.querySelector('#update-input-start').value;
+			let RPend = document.querySelector('#update-input-end').value;
+			let RPdate = document.querySelector('#update-input-date').value;
+
+			sql = 'Shifts SET bar = "'+bar+'",bartender = "'+bartender+'",day = "'+day+'",start = "'+start+'",end = "'+end+'",date = "'+date+'" WHERE bar = "'+RPbar+'" and bartender = "'+RPbartender+'" and day = "'+RPday+'" and start = "'+RPstart+'" and end = "'+RPend+'" and date = "'+RPdate+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Shifts WHERE bar = "'+bar+'" and bartender = "'+bartender+'" and day = "'+day+'" and start = "'+start+'" and end = "'+end+'" and date = "'+date+'";';
+			goModify(method, sql);
+		}	
+	}
+
+
+
+
+	//Transactions (bill_id,quantity,item,type,price)
+	function insertTransactions(){
+		hideElement(document.querySelector('#insert-btn-group'));
+		showElement(document.querySelector('#insert-itemid'));
+		showElement(document.querySelector('#insert-quantity'));
+		showElement(document.querySelector('#insert-item'));
+		showElement(document.querySelector('#insert-type'));
+		showElement(document.querySelector('#insert-price'));
+
+		showElement(document.querySelector('#update-itemid'));
+		showElement(document.querySelector('#update-quantity'));
+		showElement(document.querySelector('#update-item'));
+		showElement(document.querySelector('#update-type'));
+		showElement(document.querySelector('#update-price'));
+		
+		showElement(document.querySelector('#insert-progress'));
+
+		showModifyResult("");
+        document.querySelector('#insert-bttn').addEventListener('click',function (){TransactionsHelper('PUT')});
+        document.querySelector('#update-btn').addEventListener('click',function (){TransactionsHelper('POST')});
+        document.querySelector('#delete-btn').addEventListener('click',function (){TransactionsHelper('DELETE')});
+        document.querySelector('#back-btn').addEventListener('click',loadInsert);
+	}
+	function TransactionsHelper(method){
+		let itemid = document.querySelector('#insert-input-itemid').value;
+		let quantity = document.querySelector('#insert-input-quantity').value;
+		let item = document.querySelector('#insert-input-item').value;
+		let type = document.querySelector('#insert-input-type').value;
+		let price = document.querySelector('#insert-input-price').value;
+
+		var sql;
+		if (method == 'PUT'){
+			sql = 'Transactions (bill_id,quantity,item,type,price)VALUES("'+itemid+'","'+quantity+'","'+item+'","'+type+'","'+price+'");';
+			goInsert(sql);
+		}else if (method == 'POST'){
+			let RPbill_id = document.querySelector('#update-input-itemid').value;
+			let RPquantity = document.querySelector('#update-input-quantity').value;
+			let RPitem = document.querySelector('#update-input-item').value;
+			let RPtype = document.querySelector('#update-input-type').value;
+			let RPprice = document.querySelector('#update-input-price').value;
+
+			sql = 'Transactions SET bill_id = "'+itemid+'",quantity = "'+quantity+'",item = "'+item+'",type = "'+type+'",price = "'+price+'" WHERE bill_id = "'+RPbill_id+'" and quantity = "'+RPquantity+'" and item = "'+RPitem+'" and type = "'+RPtype+'" and price = "'+RPprice+'";';
+			goModify(method, sql);
+		}else if (method == 'DELETE'){
+			sql = 'Transactions WHERE bill_id = "'+itemid+'" and quantity = "'+quantity+'" and item = "'+item+'" and type = "'+type+'" and price = "'+price+'";';
+			goModify(method, sql);
+		}	
+	}
+	
+	function barAnalytics(){
+		var beername = document.querySelector('#beer-select').value;
+		var day = document.querySelector('#day-select').value;
+		let url = "./getbarana?beer="+beername+"&day="+day;
+		let title = "Bar Analytics of "+beername+" for "+day;
+		graph(url,title,"Bar","Sells in total");
+	}
+	
+	
 	
 	
 	

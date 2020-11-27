@@ -566,7 +566,109 @@ public class MySQLConnection {
 		return BeersInfo;
 	}
 	
+	public LinkedList<String> getInfo(String query, String title) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<String> info = new LinkedList<>();
+		try {
+			PreparedStatement statement = conn.prepareStatement(query);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				info.add(rs.getString(title));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return info;
+	}
 	
+	public LinkedList<Beer> getBarAna(String beer) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
+		String sql = "SELECT Transactions.item,Bills.bar,sum(Transactions.quantity) from Bills left join Transactions on Bills.bill_id = Transactions.bill_id" + 
+				" where Transactions.item = ?" + 
+				" group by Bills.bar" + 
+				" order by sum(Transactions.quantity)" + 
+				" DESC" + 
+				" limit 10;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, beer);
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("bar"));
+				builder.setManf(rs.getString("sum(Transactions.quantity)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
+	
+	public LinkedList<Beer> getBarAnaDay(String beer, String day) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
+		String sql = "SELECT Transactions.item,Bills.bar,sum(Transactions.quantity) from Bills left join Transactions on Bills.bill_id = Transactions.bill_id" + 
+				" where Transactions.item = ? and Bills.day = ?" + 
+				" Group by Bills.bar" + 
+				" Order by sum(Transactions.quantity)" + 
+				" DESC limit 10;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, beer);
+			statement.setString(2, day+"\n");
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("bar"));
+				builder.setManf(rs.getString("sum(Transactions.quantity)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
+	
+	public LinkedList<Beer> getBartenderAnalytics(String day, String bar, String start, String end) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new LinkedList<>();
+		}
+		LinkedList<Beer> BeersInfo = new LinkedList<>();
+		String sql = "SELECT Shifts.bartender,Shifts.day,sum(Transactions.quantity) From (Bills left join Transactions on Bills.bill_id = Transactions.bill_id) left join Shifts on Bills.bartender = Shifts.bartender" + 
+				" where  Shifts.day = ? and Bills.bar = ? and IF(start < end, Shifts.start > ? and Shifts.end < ? , Shifts.start > ? and Shifts.end > ?) and Shifts.day = Bills.day" + 
+				" group by Shifts.bartender;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, day);
+			statement.setString(2, bar);
+			statement.setString(3, start);
+			statement.setString(4, end);
+			statement.setString(5, start);
+			statement.setString(6, end);
+			ResultSet rs = statement.executeQuery();
+			BeerBuilder builder = new BeerBuilder();
+			while (rs.next()) {
+				builder.setName(rs.getString("bartender"));
+				builder.setManf(rs.getString("sum(Transactions.quantity)"));
+				BeersInfo.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return BeersInfo;
+	}
 	
 	
 	

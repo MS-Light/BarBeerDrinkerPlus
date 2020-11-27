@@ -154,6 +154,24 @@
   	<description></description>
   	<servlet-class>rpc.GetBeerTimeDistribution</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>GetInfo</servlet-name>
+  	<display-name>GetInfo</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetInfo</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetBarAna</servlet-name>
+  	<display-name>GetBarAna</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBarAna</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetBartenderAnalytics</servlet-name>
+  	<display-name>GetBartenderAnalytics</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetBartenderAnalytics</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>GetBeer</servlet-name>
   	<url-pattern>/getbeer</url-pattern>
@@ -253,5 +271,17 @@
   <servlet-mapping>
   	<servlet-name>GetBeerTimeDistribution</servlet-name>
   	<url-pattern>/getbeertimedistribution</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetInfo</servlet-name>
+  	<url-pattern>/getinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBarAna</servlet-name>
+  	<url-pattern>/getbarana</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetBartenderAnalytics</servlet-name>
+  	<url-pattern>/getbartenderanalytics</url-pattern>
   </servlet-mapping>
 </web-app>
