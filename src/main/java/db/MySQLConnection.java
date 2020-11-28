@@ -626,7 +626,7 @@ public class MySQLConnection {
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, beer);
-			statement.setString(2, day+"\n");
+			statement.setString(2, day);
 			ResultSet rs = statement.executeQuery();
 			BeerBuilder builder = new BeerBuilder();
 			while (rs.next()) {
@@ -678,10 +678,10 @@ public class MySQLConnection {
 	
 	
 	
-	public void insertFunction(String query) {
+	public Integer insertFunction(String query) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return;
+			return 0;
 		}
 		String sql = "INSERT INTO " + query;
 		try {
@@ -689,13 +689,15 @@ public class MySQLConnection {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return 0;
 		}
+		return 1;
 	}
 	
-	public void updateFunction(String query) {
+	public Integer updateFunction(String query) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return;
+			return 0;
 		}
 		String sql = "UPDATE " + query;
 		try {
@@ -703,13 +705,15 @@ public class MySQLConnection {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return 0;
 		}
+		return 1;
 	}
 	
-	public void deleteFunction(String query) {
+	public Integer deleteFunction(String query) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return;
+			return 0;
 		}
 		String sql = "DELETE FROM " + query;
 		try {
@@ -717,7 +721,9 @@ public class MySQLConnection {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return 0;
 		}
+		return 1;
 	}
 	
 	

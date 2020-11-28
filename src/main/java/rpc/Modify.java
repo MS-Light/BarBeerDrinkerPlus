@@ -28,9 +28,9 @@ public class Modify extends HttpServlet {
     	MySQLConnection connection = new MySQLConnection();
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String sql = input.getString("query");
-		connection.insertFunction(sql);
+		int resp = connection.insertFunction(sql);
 		connection.close();
-		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+		RpcHelper.writeJsonObject(response, new JSONObject().put("result", resp));
 	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,9 +39,9 @@ public class Modify extends HttpServlet {
 		MySQLConnection connection = new MySQLConnection();
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String sql = input.getString("query");
-		connection.updateFunction(sql);
+		int resp = connection.updateFunction(sql);
 		connection.close();
-		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+		RpcHelper.writeJsonObject(response, new JSONObject().put("result", resp));
 	}
 
 	/**
@@ -51,9 +51,9 @@ public class Modify extends HttpServlet {
 		MySQLConnection connection = new MySQLConnection();
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String sql = input.getString("query");
-		connection.deleteFunction(sql);
+		int resp = connection.deleteFunction(sql);
 		connection.close();
-		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+		RpcHelper.writeJsonObject(response, new JSONObject().put("result", resp));
 	}
 
 }

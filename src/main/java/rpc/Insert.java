@@ -41,9 +41,9 @@ public class Insert extends HttpServlet {
 		MySQLConnection connection = new MySQLConnection();
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String sql = input.getString("query");
-		connection.insertFunction(sql);
+		int resp = connection.insertFunction(sql);
 		connection.close();
-		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+		RpcHelper.writeJsonObject(response, new JSONObject().put("result", resp));
 	}
 
 }

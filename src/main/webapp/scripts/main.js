@@ -1590,6 +1590,7 @@
         hideElement(document.querySelector('#insert-bartender'));
         hideElement(document.querySelector('#insert-quantity'));
 		hideElement(document.querySelector('#insert-progress'));
+		hideElement(document.querySelector('#insert-billid'));
 		
 		
 		
@@ -1616,6 +1617,7 @@
         hideElement(document.querySelector('#update-time'));
         hideElement(document.querySelector('#update-bartender'));
         hideElement(document.querySelector('#update-quantity'));
+        hideElement(document.querySelector('#update-billid'));
         showElement(document.querySelector('#insert-btn-group'));
 		
 		document.querySelector('#insert-drinker-btn').addEventListener('click',insertDrinker);
@@ -1791,7 +1793,7 @@
         document.querySelector('#back-btn').addEventListener('click',loadInsert);
 	}
 	function BillsHelper(method){
-		let itemid = document.querySelector('#insert-input-itemid').value;
+		let billid = document.querySelector('#insert-input-billid').value;
 		let bar = document.querySelector('#insert-input-bar').value;
 		let date = document.querySelector('#insert-input-date').value;
 		let drinker = document.querySelector('#insert-input-drinker').value;
@@ -1805,10 +1807,10 @@
 
 		var sql;
 		if (method == 'PUT'){
-			sql = 'Bills (bill_id,bar,date,drinker,item_price,tax_price,tip,total_price,time,bartender,day)VALUES("'+itemid+'","'+bar+'","'+date+'","'+drinker+'","'+itemprice+'","'+taxprice+'","'+tip+'","'+totalprice+'","'+time+'","'+bartender+'","'+day+'");';
+			sql = 'Bills (bill_id,bar,date,drinker,item_price,tax_price,tip,total_price,time,bartender,day)VALUES("'+billid+'","'+bar+'","'+date+'","'+drinker+'","'+itemprice+'","'+taxprice+'","'+tip+'","'+totalprice+'","'+time+'","'+bartender+'","'+day+'");';
 			goInsert(sql);
 		}else if (method == 'POST'){
-			let RPbill_id = document.querySelector('#update-input-itemid').value;
+			let RPbill_id = document.querySelector('#update-input-billid').value;
 			let RPbar = document.querySelector('#update-input-bar').value;
 			let RPdate = document.querySelector('#update-input-date').value;
 			let RPdrinker = document.querySelector('#update-input-drinker').value;
@@ -1820,10 +1822,10 @@
 			let RPbartender = document.querySelector('#update-input-bartender').value;
 			let RPday = document.querySelector('#update-input-day').value;
 
-			sql = 'Bills SET bill_id = "'+itemid+'",bar = "'+bar+'",date = "'+date+'",drinker = "'+drinker+'",item_price = "'+itemprice+'",tax_price = "'+taxprice+'",tip = "'+tip+'",total_price = "'+totalprice+'",time = "'+time+'",bartender = "'+bartender+'",day = "'+day+'" WHERE bill_id = "'+RPbill_id+'" and bar = "'+RPbar+'" and date = "'+RPdate+'" and drinker = "'+RPdrinker+'" and item_price = "'+RPitem_price+'" and tax_price = "'+RPtax_price+'" and tip = "'+RPtip+'" and total_price = "'+RPtotal_price+'" and time = "'+RPtime+'" and bartender = "'+RPbartender+'" and day = "'+RPday+'";';
+			sql = 'Bills SET bill_id = "'+billid+'",bar = "'+bar+'",date = "'+date+'",drinker = "'+drinker+'",item_price = "'+itemprice+'",tax_price = "'+taxprice+'",tip = "'+tip+'",total_price = "'+totalprice+'",time = "'+time+'",bartender = "'+bartender+'",day = "'+day+'" WHERE bill_id = "'+RPbill_id+'" and bar = "'+RPbar+'" and date = "'+RPdate+'" and drinker = "'+RPdrinker+'" and item_price = "'+RPitem_price+'" and tax_price = "'+RPtax_price+'" and tip = "'+RPtip+'" and total_price = "'+RPtotal_price+'" and time = "'+RPtime+'" and bartender = "'+RPbartender+'" and day = "'+RPday+'";';
 			goModify(method, sql);
 		}else if (method == 'DELETE'){
-			sql = 'Bills WHERE bill_id = "'+itemid+'" and bar = "'+bar+'" and date = "'+date+'" and drinker = "'+drinker+'" and item_price = "'+itemprice+'" and tax_price = "'+taxprice+'" and tip = "'+tip+'" and total_price = "'+totalprice+'" and time = "'+time+'" and bartender = "'+bartender+'" and day = "'+day+'";';
+			sql = 'Bills WHERE bill_id = "'+billid+'" and bar = "'+bar+'" and date = "'+date+'" and drinker = "'+drinker+'" and item_price = "'+itemprice+'" and tax_price = "'+taxprice+'" and tip = "'+tip+'" and total_price = "'+totalprice+'" and time = "'+time+'" and bartender = "'+bartender+'" and day = "'+day+'";';
 			goModify(method, sql);
 		}	
 	}
@@ -2089,13 +2091,13 @@
 	//Transactions (bill_id,quantity,item,type,price)
 	function insertTransactions(){
 		hideElement(document.querySelector('#insert-btn-group'));
-		showElement(document.querySelector('#insert-itemid'));
+		showElement(document.querySelector('#insert-billid'));
 		showElement(document.querySelector('#insert-quantity'));
 		showElement(document.querySelector('#insert-item'));
 		showElement(document.querySelector('#insert-type'));
 		showElement(document.querySelector('#insert-price'));
 
-		showElement(document.querySelector('#update-itemid'));
+		showElement(document.querySelector('#update-billid'));
 		showElement(document.querySelector('#update-quantity'));
 		showElement(document.querySelector('#update-item'));
 		showElement(document.querySelector('#update-type'));
@@ -2110,7 +2112,7 @@
         document.querySelector('#back-btn').addEventListener('click',loadInsert);
 	}
 	function TransactionsHelper(method){
-		let itemid = document.querySelector('#insert-input-itemid').value;
+		let billid = document.querySelector('#insert-input-billid').value;
 		let quantity = document.querySelector('#insert-input-quantity').value;
 		let item = document.querySelector('#insert-input-item').value;
 		let type = document.querySelector('#insert-input-type').value;
@@ -2118,19 +2120,19 @@
 
 		var sql;
 		if (method == 'PUT'){
-			sql = 'Transactions (bill_id,quantity,item,type,price)VALUES("'+itemid+'","'+quantity+'","'+item+'","'+type+'","'+price+'");';
+			sql = 'Transactions (bill_id,quantity,item,type,price)VALUES("'+billid+'","'+quantity+'","'+item+'","'+type+'","'+price+'");';
 			goInsert(sql);
 		}else if (method == 'POST'){
-			let RPbill_id = document.querySelector('#update-input-itemid').value;
+			let RPbill_id = document.querySelector('#update-input-billid').value;
 			let RPquantity = document.querySelector('#update-input-quantity').value;
 			let RPitem = document.querySelector('#update-input-item').value;
 			let RPtype = document.querySelector('#update-input-type').value;
 			let RPprice = document.querySelector('#update-input-price').value;
 
-			sql = 'Transactions SET bill_id = "'+itemid+'",quantity = "'+quantity+'",item = "'+item+'",type = "'+type+'",price = "'+price+'" WHERE bill_id = "'+RPbill_id+'" and quantity = "'+RPquantity+'" and item = "'+RPitem+'" and type = "'+RPtype+'" and price = "'+RPprice+'";';
+			sql = 'Transactions SET bill_id = "'+billid+'",quantity = "'+quantity+'",item = "'+item+'",type = "'+type+'",price = "'+price+'" WHERE bill_id = "'+RPbill_id+'" and quantity = "'+RPquantity+'" and item = "'+RPitem+'" and type = "'+RPtype+'" and price = "'+RPprice+'";';
 			goModify(method, sql);
 		}else if (method == 'DELETE'){
-			sql = 'Transactions WHERE bill_id = "'+itemid+'" and quantity = "'+quantity+'" and item = "'+item+'" and type = "'+type+'" and price = "'+price+'";';
+			sql = 'Transactions WHERE bill_id = "'+billid+'" and quantity = "'+quantity+'" and item = "'+item+'" and type = "'+type+'" and price = "'+price+'";';
 			goModify(method, sql);
 		}	
 	}
@@ -2165,10 +2167,10 @@
 		function(res) {
 			var result = JSON.parse(res);
 			// successfully logged in
-			if (result.result === 'SUCCESS') {
+			if (result.result === 1) {
 				showModifyResult('Succesfully Modifyed');
 			} else {
-				showModifyResult('Some Error Existed');
+				showModifyResult('A foreign key constraint violation');
 			}
 		},
 		// error
@@ -2188,7 +2190,7 @@
 		function(res) {
 			var result = JSON.parse(res);
 			// successfully logged in
-			if (result.result === 'SUCCESS') {
+			if (result.result === 1) {
 				showModifyResult('Succesfully Modifyed');
 			} else {
 				showModifyResult('Some Error Existed');
